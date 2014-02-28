@@ -13,6 +13,7 @@ public class AgeGroupFragment extends Fragment {
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
 		super.onAttach(activity);
+		
 	}
 
 	@Override
