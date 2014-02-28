@@ -1,4 +1,4 @@
-package com.example.sampleproject;
+package com.employeesurvey;
 
 import java.io.IOException;
 import java.util.List;

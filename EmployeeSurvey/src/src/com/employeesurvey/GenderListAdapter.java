@@ -1,4 +1,4 @@
-package com.example.sampleproject;
+package com.employeesurvey;
 
 import android.content.Context;
 import android.view.LayoutInflater;

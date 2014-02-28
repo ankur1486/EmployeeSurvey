@@ -1,4 +1,4 @@
-package com.example.sampleproject;
+package com.employeesurvey;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -11,30 +11,14 @@ public class DashboardActivity extends FragmentActivity {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		
+
 		final Window win = getWindow();
 
 		win.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-		// No Titlebar
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_main);
+		setContentView(R.layout.dashboard_activity_layout);
 
-		// LinearLayout fragContainer = (LinearLayout)
-		// findViewById(R.id.main_id);
-		//
-		// LinearLayout ll = new LinearLayout(this);
-		// ll.setOrientation(LinearLayout.HORIZONTAL);
-		//
-		// ll.setId(12345);
-
-//		getSupportFragmentManager().beginTransaction()
-//				.add(new LeftFragment(), "leftFragmentTag").commit();
-//		getSupportFragmentManager().beginTransaction()
-//				.add(new RightFragment(), "rightFragmentTag").commit();
-
-		// fragContainer.addView(ll);
 	}
 
 	@Override

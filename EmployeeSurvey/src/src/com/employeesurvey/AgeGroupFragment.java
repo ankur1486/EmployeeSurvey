@@ -1,4 +1,4 @@
-package com.example.sampleproject;
+package com.employeesurvey;
 
 import android.app.Activity;
 import android.app.Fragment;

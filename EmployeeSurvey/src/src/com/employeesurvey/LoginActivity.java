@@ -1,4 +1,4 @@
-package com.example.sampleproject;
+package com.employeesurvey;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,9 +12,21 @@ import android.widget.EditText;
 
 public class LoginActivity extends FragmentActivity implements OnClickListener {
 
+	/**
+	 * Edit field for username
+	 */
 	private EditText username_editfield;
-	private EditText password_editfield;
+	/**
+	 * Edit filed for store Name
+	 */
+	private EditText storename_editfield;
+	/**
+	 * Cancel button for cancel the form
+	 */
 	private Button cancel_button;
+	/**
+	 * Login button for Saving the store and username and loging in
+	 */
 	private Button login_button;
 
 	@Override
@@ -27,7 +39,7 @@ public class LoginActivity extends FragmentActivity implements OnClickListener {
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
 		// No Titlebar
-		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		// requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.login_layout);
 
 		initializaComponents();
@@ -38,19 +50,27 @@ public class LoginActivity extends FragmentActivity implements OnClickListener {
 	 */
 	private void initializaComponents() {
 		username_editfield = (EditText) findViewById(R.id.username_editText);
-		password_editfield = (EditText) findViewById(R.id.password_editText);
+		storename_editfield = (EditText) findViewById(R.id.storename_editText);
 		login_button = (Button) findViewById(R.id.login_button);
 		login_button.setOnClickListener(this);
 		cancel_button = (Button) findViewById(R.id.cancel_button);
 		cancel_button.setOnClickListener(this);
 	}
 
+	/**
+	 * overriden method onClick of buttons
+	 */
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.login_button:
-			Intent intent = new Intent(LoginActivity.this , DashboardActivity.class);
+			Intent intent = new Intent(LoginActivity.this,
+					DashboardActivity.class);
 			startActivity(intent);
+			break;
+
+		case R.id.cancel_button:
+			finish();
 			break;
 
 		default:
