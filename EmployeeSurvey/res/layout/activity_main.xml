@@ -1,0 +1,37 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main_id"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_travelsure" >
+
+    <fragment
+        android:id="@+id/left_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        class="com.example.sampleproject.LeftFragment" />
+
+    <LinearLayout
+        android:id="@+id/gender_age_group_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="2"
+        android:weightSum="1"
+        android:orientation="vertical" >
+
+        <fragment
+            android:id="@+id/right_fragmment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".4"
+            class="com.example.sampleproject.RightFragment" />
+
+        <fragment
+            android:id="@+id/age_group_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".6"
+            class="com.example.sampleproject.AgeGroupFragment" />
+    </LinearLayout>
+
+</LinearLayout>

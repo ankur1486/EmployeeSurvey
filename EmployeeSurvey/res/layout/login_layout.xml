@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg_travelsure" >
+
+    <TextView
+        android:id="@+id/login_header_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_margin="30dp"
+        android:gravity="center_horizontal"
+        android:text="@string/login_screen_"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@android:color/black"
+        android:textSize="40sp" />
+
+        <RelativeLayout
+            android:id="@+id/userpassword_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp">
+
+            <EditText
+                android:id="@+id/username_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:ems="20"
+                android:hint="@string/hint_username"
+                android:textSize="30sp" >
+
+                <requestFocus />
+            </EditText>
+
+            <EditText
+                android:id="@+id/password_editText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/username_editText"
+                android:layout_centerHorizontal="true"
+                android:ems="20"
+                android:hint="@string/hint_password"
+                android:inputType="textPassword"
+                android:textSize="30sp" />
+        </RelativeLayout>
+          <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+				android:layout_alignParentBottom="true"
+                android:gravity="center_horizontal"
+                android:orientation="horizontal" >
+
+                <Button
+                    android:id="@+id/login_button"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/button_login"
+                    android:padding="10dp"
+                    android:background="@drawable/btn_travelsure_disabled"
+                    android:textSize="32sp" />
+
+                <Button
+                    android:id="@+id/cancel_button"
+                    android:layout_width="150dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/button_cancel"
+                    android:padding="10dp"
+                    android:background="@drawable/btn_travelsure_disabled"
+                    android:textSize="32sp" />
+            </LinearLayout>
+</RelativeLayout>

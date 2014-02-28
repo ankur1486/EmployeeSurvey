@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:id="@+id/layout_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="6" >
+
+        <TextView
+            android:id="@+id/textView_groupId"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="ID"
+            android:textColor="@android:color/white"
+            android:padding="5dp"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView_no_of_person"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Person Count"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:padding="5dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Time"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:padding="5dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Location"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:padding="5dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView_add_delete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Add/Delete"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:padding="5dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView_form_completed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Completed"
+            android:textColor="@android:color/white"
+            android:textSize="20sp"
+            android:padding="5dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/left_panel_listView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/layout_header" >
+    </ListView>
+
+</LinearLayout>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">SampleProject</string>
+    <string name="action_settings">Settings</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="welcome_screen_">"Welcome Screen "</string>
+    <string name="login_screen_">"Login Form "</string>
+    <string name="hint_username">username</string>
+    <string name="hint_password">password</string>
+    <string name="button_login">Login</string>
+    <string name="button_cancel">Cancel</string>
+
+</resources>
