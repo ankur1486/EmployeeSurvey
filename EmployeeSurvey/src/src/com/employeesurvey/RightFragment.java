@@ -1,4 +1,4 @@
-package com.employeesurvey;
+package src.com.employeesurvey;
 
 import android.app.Activity;
 import android.os.Bundle;

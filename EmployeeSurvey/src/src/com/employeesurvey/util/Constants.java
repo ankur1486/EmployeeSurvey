@@ -1,4 +1,4 @@
-package com.employeesurvey.util;
+package src.com.employeesurvey.util;
 
 public class Constants {
 

@@ -1,4 +1,4 @@
-package com.employeesurvey.util;
+package src.com.employeesurvey.util;
 
 import java.io.IOException;
 import java.util.List;
@@ -32,8 +32,8 @@ public class GPSTracker extends Service implements LocationListener
     boolean canGetLocation = false;
 
     Location location;
-    double latitude;
-    double longitude;
+    public double latitude;
+    public  double longitude;
 
     //The minimum distance to change updates in metters
     private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10; //10 metters

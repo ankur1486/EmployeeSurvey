@@ -1,9 +1,10 @@
-package com.employeesurvey;
+package src.com.employeesurvey;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import src.com.employeesurvey.util.GPSTracker;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.text.Editable;

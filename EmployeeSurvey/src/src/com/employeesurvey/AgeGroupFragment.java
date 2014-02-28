@@ -1,4 +1,4 @@
-package com.employeesurvey;
+package src.com.employeesurvey;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -12,7 +12,7 @@ public class AgeGroupFragment extends Fragment {
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
-		super.onAttach(activity);		
+		super.onAttach(activity);	
 	}
 
 	@Override

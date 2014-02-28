@@ -1,4 +1,4 @@
-package com.employeesurvey.database;
+package src.com.employeesurvey.database;
 
 public class EmployeeSurveyDb{
 
