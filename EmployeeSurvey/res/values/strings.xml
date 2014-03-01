@@ -10,5 +10,19 @@
     <string name="hint_storename">store name </string>
     <string name="button_login">Login</string>
     <string name="button_cancel">Cancel</string>
+    <string name="female">Female</string>
+    <string name="male">Male</string>
+    <string name="_60_">60 ></string>
+    
+    <!-- #8211; for (-) -->
+    <string name="_50_60">50 - 60</string>
+    <string name="_40_50">40 - 50</string>
+    <string name="_30_40">30 - 40</string>
+    <string name="_20_30">20 - 30</string>
+     <string name="_10_20">10-20</string>
+    <string name="_0_10">0 - 10</string>
+    <string name="group_type">Group Type</string>
+    <string name="gender_agegrp">Gender and Age group</string>
+   
 
 </resources>

@@ -32,14 +32,14 @@ public class LeftFragment extends Fragment {
 		} catch (NumberFormatException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (IOException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return fragment;
 	}
 
-	private void init(View fragment) throws NumberFormatException, IOException {
+	private void init(View fragment) {
 		mLeftPanelListView = (ListView)fragment.findViewById(R.id.left_panel_listView);
 		LeftPanelListAdapter genderListAdapter = new LeftPanelListAdapter(getActivity(),LeftFragment.this);
 		mLeftPanelListView.setAdapter(genderListAdapter);
@@ -62,7 +62,7 @@ public class LeftFragment extends Fragment {
             // can't get location
             // GPS or Network is not enabled
             // Ask user to enable GPS/network in settings
-            gpsTracker.showSettingsAlert();
+//            gpsTracker.showSettingsAlert();
         }
         return postalCode;
 	}

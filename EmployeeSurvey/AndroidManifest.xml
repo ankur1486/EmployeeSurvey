@@ -18,8 +18,9 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.employeesurvey.LoginActivity"
+            android:name="src.com.employeesurvey.LoginActivity"
             android:label="@string/app_name"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="landscape" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,7 +29,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.employeesurvey.DashboardActivity"
+            android:name="src.com.employeesurvey.DashboardActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape" >
         </activity>

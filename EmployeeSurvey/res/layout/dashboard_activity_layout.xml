@@ -8,7 +8,13 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
-        class="com.employeesurvey.LeftFragment" />
+        class="src.com.employeesurvey.LeftFragment" />
+    
+    <View
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:background="@android:color/black" >
+    </View>
 
     <LinearLayout
         android:id="@+id/gender_age_group_layout"
@@ -19,18 +25,18 @@
         android:weightSum="1" >
 
         <fragment
+            android:id="@+id/group_type_fragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight=".8"
+            class="src.com.employeesurvey.GroupTypeFragment" />
+
+        <fragment
             android:id="@+id/right_fragmment"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight=".4"
-            class="com.employeesurvey.RightFragment" />
-
-        <fragment
-            android:id="@+id/age_group_fragment"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_weight=".6"
-            class="com.employeesurvey.AgeGroupFragment" />
+            android:layout_weight=".2"
+            class="src.com.employeesurvey.RightFragment" />
     </LinearLayout>
 
 </LinearLayout>
