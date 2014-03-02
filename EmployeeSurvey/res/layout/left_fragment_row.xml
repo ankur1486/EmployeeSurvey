@@ -4,13 +4,13 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:weightSum="6"
-	android:background="@android:color/holo_blue_bright"
     android:orientation="horizontal" >
     
     <TextView
         android:id="@+id/textView_groupId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="100dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="1"
@@ -20,14 +20,16 @@
         android:id="@+id/numberPicker_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="100dp"
         android:layout_weight="1"
-        android:text="Set Count"
+        android:text="Number"
         android:textColor="@android:color/black" />
 
     <TextView
         android:id="@+id/textView_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="100dp"
         android:layout_weight="1"
         android:gravity="center"
         android:text="Time"
@@ -37,6 +39,7 @@
         android:id="@+id/textView_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="100dp"
         android:layout_weight="1"
         android:text="Location"
         android:gravity="center"
@@ -46,16 +49,20 @@
         android:id="@+id/button_add_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/btn_normal"
+        android:minWidth="100dp"
+        android:button="@drawable/toggle_button"
+        android:background="@null"
         android:textColor="@android:color/black"
+        android:gravity="center_horizontal"
         android:layout_weight="1"
-        android:textOff="Add"
-        android:textOn="Delete" />
+        android:textOff=""
+        android:textOn="" />
 
     <CheckBox
         android:id="@+id/checkBox_form_completed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:minWidth="100dp"
         android:gravity="center"
         android:layout_weight="1"
         android:textColor="@android:color/black" />

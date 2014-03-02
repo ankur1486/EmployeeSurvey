@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginLeft="6dp"
+    android:layout_marginRight="6dp"
     android:gravity="center" >
 
     <Switch
@@ -9,8 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginRight="10dp"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="6dp"
+        android:layout_marginRight="6dp"
         android:paddingLeft="20dp"
         android:textOff="@string/female"
         android:textOn="@string/male"
@@ -30,7 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical" >
-            
+
             <RadioButton
                 android:id="@+id/radioButton_age_group1"
                 android:layout_width="wrap_content"
@@ -72,7 +74,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/_50_60" >
             </RadioButton>
-            
+
             <RadioButton
                 android:id="@+id/radioButton_age_group7"
                 android:layout_width="wrap_content"
