@@ -1,6 +1,7 @@
 package src.com.employeesurvey;
 
 import src.com.employeesurvey.adapter.LeftPanelListAdapter;
+import src.com.employeesurvey.prefrences.EmployeePrefrence;
 import src.com.employeesurvey.util.LocationUtils;
 import android.app.Activity;
 import android.location.Location;
@@ -55,6 +56,13 @@ public class LeftFragment extends Fragment implements LocationListener {
 		if (location != null) {
 			System.out.println("Latitude :" + location.getLatitude());
 			System.out.println("Longitude :" + location.getLongitude());
+
+			EmployeePrefrence.getInstance()
+					.setStringValue(EmployeePrefrence.SET_LATITUDE,
+							"" + location.getLatitude());
+			EmployeePrefrence.getInstance().setStringValue(
+					EmployeePrefrence.SET_LONGITUDE,
+					"" + location.getLongitude());
 		}
 	}
 

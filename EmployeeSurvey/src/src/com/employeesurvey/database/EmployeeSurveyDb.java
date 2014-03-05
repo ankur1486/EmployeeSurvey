@@ -10,6 +10,11 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+/**
+ * 
+ * Database class for storing employee data to local database
+ * 
+ */
 public class EmployeeSurveyDb {
 
 	private static final int DATABASE_VERSION = 1;
@@ -23,9 +28,29 @@ public class EmployeeSurveyDb {
 	/** Internal access to database */
 	private SQLiteDatabase database;
 
-	public static final String LEFT_ROW_DETAIL_TABLE = "left_row_detail";
-	public static final String FIELD_ROW_ID = "row_id";
-	public static final String FIELD_PERSON_COUNT = "person_count";
+	/**
+	 * username and storename table
+	 */
+	private static final String USERNAME_STORENAME_TABLE = "userdetails";
+	private static final String FIELD_USER_ROW_ID = "user_row_id";
+	private static final String FIELD_USERNAME = "username_id";
+	private static final String FIELD_STORENAME = "storename_id";
+
+	private final static String QUERY_USERNAME_STORENAME_TABLE = "CREATE TABLE IF NOT EXISTS "
+			+ USERNAME_STORENAME_TABLE
+			+ " ("
+			+ FIELD_USER_ROW_ID
+			+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
+			+ FIELD_USERNAME
+			+ " TEXT, " + FIELD_STORENAME + " TEXT);";
+
+	/**
+	 * left row table
+	 */
+
+	private static final String LEFT_ROW_DETAIL_TABLE = "left_row_detail";
+	private static final String FIELD_ROW_ID = "row_id";
+	private static final String FIELD_PERSON_COUNT = "person_count";
 	private static final String FIELD_TIME = "time";
 	private static final String FIELD_LATITUDE = "latitude";
 	private static final String FIELD_lONGITUDE = "longitude";
@@ -47,7 +72,14 @@ public class EmployeeSurveyDb {
 			+ " TEXT, "
 			+ FIELD_COMPLETED
 			+ " INTEGER, " + FIELD_DELETE + " INTEGER);";
+	
+	/** Projection for getting value of an error key */
+	private final static String[] PROJECTION_LEFT_ROW_VALUE = { FIELD_ROW_ID,
+		FIELD_PERSON_COUNT, FIELD_TIME };
 
+	/**
+	 * gender age grp and grp type table
+	 */
 	public static final String GENDER_DETAIL_TABLE = "gender_detail";
 	private static final String FIELD_GENDER_TYPE = "gender_type";
 	private static final String FIELD_AGE_GROUP = "age_group";
@@ -136,6 +168,34 @@ public class EmployeeSurveyDb {
 		return opened;
 	}
 
+	public synchronized long insertUsernameStorename(String username,
+			String storename) {
+
+		// Create object holding values
+		ContentValues cv = new ContentValues();
+
+		// cv.put(FIELD_ROW_ID, rowID);
+		cv.put(FIELD_USERNAME, username);
+		cv.put(FIELD_STORENAME, storename);
+
+		long result = database.insert(USERNAME_STORENAME_TABLE, null, cv);
+
+		return result;
+	}
+
+	/**
+	 * delete username and storename table
+	 * 
+	 * @param username
+	 * @param storename
+	 */
+	public synchronized void deleteUsernameStorename(String username,
+			String storename) {
+
+		database.delete(USERNAME_STORENAME_TABLE, FIELD_USERNAME + " = "
+				+ username, null);
+	}
+
 	/**
 	 * insert left row in table
 	 * 
@@ -155,8 +215,9 @@ public class EmployeeSurveyDb {
 	 *            is deleted or not
 	 * @return long whether value was insterted or not
 	 */
-	public long insertLeftRow(int rowID, int personCount, String time,
-			String latitude, String longitude, int completed, int delete) {
+	public synchronized long insertLeftRow(int rowID, int personCount,
+			String time, String latitude, String longitude, int completed,
+			int delete) {
 
 		// Create object holding values
 		ContentValues cv = new ContentValues();
@@ -170,11 +231,14 @@ public class EmployeeSurveyDb {
 		cv.put(FIELD_DELETE, delete);
 
 		long result = database.insert(LEFT_ROW_DETAIL_TABLE, null, cv);
+		
+		System.out.println("inserted left row to table "+result);
 
 		return result;
 	}
 
-	public long insertGenderRow(int rowID, String genderType, int ageGroup) {
+	public synchronized long insertGenderRow(int rowID, String genderType,
+			int ageGroup) {
 
 		// Create object holding values
 		ContentValues cv = new ContentValues();
@@ -212,13 +276,13 @@ public class EmployeeSurveyDb {
 	 * @return A cursor with time stamp for particular error key
 	 */
 	public Cursor getLeftRowEntries(int deleteCheck) {
-		String whereClause = FIELD_DELETE + "=?";
+		String whereClause = FIELD_DELETE +   "= ?";
 		String[] whereArgs = new String[] { "" + deleteCheck };
-		Cursor cursor = database.query(GENDER_DETAIL_TABLE,
-				PROJECTION_GENDER_VALUE, whereClause, whereArgs, null, null,
+		Cursor cursor = database.query(LEFT_ROW_DETAIL_TABLE,
+				PROJECTION_LEFT_ROW_VALUE, null, null, null, null,
 				null);
 
-		Log.d(TAG, "Returning " + cursor.getCount());
+		Log.d(TAG, "Returning getLeftRowEntries " + cursor.getCount());
 
 		return cursor;
 	}
@@ -234,6 +298,7 @@ public class EmployeeSurveyDb {
 
 		@Override
 		public void onCreate(SQLiteDatabase db) {
+			db.execSQL(QUERY_USERNAME_STORENAME_TABLE);
 			db.execSQL(QUERY_LEFT_ROW_TABLE);
 			db.execSQL(QUERY_GENDER_TABLE);
 		}

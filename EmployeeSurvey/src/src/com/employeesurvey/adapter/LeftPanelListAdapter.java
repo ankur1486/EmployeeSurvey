@@ -5,6 +5,8 @@ import java.util.Calendar;
 
 import src.com.employeesurvey.R;
 import src.com.employeesurvey.RightFragment;
+import src.com.employeesurvey.database.EmployeeSurveyDb;
+import src.com.employeesurvey.prefrences.EmployeePrefrence;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -30,10 +32,18 @@ public class LeftPanelListAdapter extends BaseAdapter {
 	private int mCount = 1;
 	private Fragment mFragment;
 	private String currentTime;
+	private String mLatitude;
+	private String mLongitude;
 
 	public LeftPanelListAdapter(Context context, Fragment fragment) {
 		mContext = context;
 		mFragment = fragment;
+
+		mLatitude = EmployeePrefrence.getInstance().getStringValue(
+				EmployeePrefrence.SET_LATITUDE, "12.77");
+		mLongitude = EmployeePrefrence.getInstance().getStringValue(
+				EmployeePrefrence.SET_LONGITUDE, "30.77");
+
 	}
 
 	private String getcurrentTime() {
@@ -58,7 +68,7 @@ public class LeftPanelListAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
+	public View getView(final int position, View convertView, ViewGroup parent) {
 		View view;
 		if (convertView == null) {
 			LayoutInflater layoutInflater = LayoutInflater.from(mContext);
@@ -67,7 +77,6 @@ public class LeftPanelListAdapter extends BaseAdapter {
 			view = convertView;
 		}
 
-		view.setSelected(true);
 		ToggleButton addDeleteButton = (ToggleButton) view
 				.findViewById(R.id.button_add_delete);
 		addDeleteButton
@@ -77,14 +86,22 @@ public class LeftPanelListAdapter extends BaseAdapter {
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
 						if (isChecked) {
+							EmployeeSurveyDb.getInstance().insertLeftRow(position, 0, currentTime, mLatitude, mLongitude, 1, 1);
 							mCount = mCount + 1;
 							notifyDataSetChanged();
+							
+							
 						} else {
 							mCount = mCount - 1;
 							notifyDataSetChanged();
+							
+							EmployeeSurveyDb.getInstance().getLeftRowEntries(0);
 						}
 					}
 				});
+
+		addDeleteButton.setOnClickListener(new onClickAddDeleteButton(position,
+				mContext));
 
 		final Button countButton = (Button) view
 				.findViewById(R.id.numberPicker_button);
@@ -104,9 +121,9 @@ public class LeftPanelListAdapter extends BaseAdapter {
 				numberPicker.setMaxValue(20);
 
 				alertDialog = new AlertDialog.Builder(mContext)
-						.setTitle("Text Size:")
+						.setTitle(R.string.number_of_persons_)
 						.setView(npView)
-						.setPositiveButton("Ok",
+						.setPositiveButton(R.string.ok,
 								new DialogInterface.OnClickListener() {
 
 									public void onClick(DialogInterface dialog,
@@ -119,12 +136,10 @@ public class LeftPanelListAdapter extends BaseAdapter {
 														R.id.right_fragmment);
 										rightFragment.updateList(index);
 
-										System.out.println("Value selected :"
-												+ index);
 										countButton.setText("" + index);
 									}
 								})
-						.setNegativeButton("Cancel",
+						.setNegativeButton(R.string.cancel,
 								new DialogInterface.OnClickListener() {
 									public void onClick(DialogInterface dialog,
 											int whichButton) {
@@ -147,13 +162,35 @@ public class LeftPanelListAdapter extends BaseAdapter {
 		timeTextView.setText(getcurrentTime());
 		TextView locationTextView = (TextView) view
 				.findViewById(R.id.textView_location);
-		locationTextView.setText("Store loc");
+		locationTextView.setText(mLatitude + " , " + mLongitude);
 		locationTextView.setOnClickListener(new OnLocationItemClickListener(
 				position, mContext));
 		view.setOnClickListener(new OnItemClickListener(position, mContext));
 		return view;
 	}
 
+}
+
+/**
+ * 
+ * on click Add/Delete
+ * 
+ */
+class onClickAddDeleteButton implements OnClickListener {
+	private int mPosition;
+	private Context mViewClickContext;
+
+	onClickAddDeleteButton(int position, Context context) {
+		mPosition = position;
+		mViewClickContext = context;
+	}
+
+	public void onClick(View v) {
+
+		Toast.makeText(mViewClickContext, "View item clicked ",
+				Toast.LENGTH_SHORT).show();
+
+	}
 }
 
 class OnItemClickListener implements OnClickListener {
@@ -184,8 +221,11 @@ class OnLocationItemClickListener implements OnClickListener {
 
 	public void onClick(View v) {
 
-		double latitude = 40.714728;
-		double longitude = -73.998672;
+		String latitude = EmployeePrefrence.getInstance().getStringValue(
+				EmployeePrefrence.SET_LATITUDE, "12.77");
+		String longitude = EmployeePrefrence.getInstance().getStringValue(
+				EmployeePrefrence.SET_LONGITUDE, "33.77");
+
 		String label = "Your Store Location";
 		String uriBegin = "geo:" + latitude + "," + longitude;
 		String query = latitude + "," + longitude + "(" + label + ")";

@@ -1,14 +1,18 @@
 package src.com.employeesurvey;
 
+import src.com.employeesurvey.database.EmployeeSurveyDb;
+import src.com.employeesurvey.prefrences.EmployeePrefrence;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class LoginActivity extends FragmentActivity implements OnClickListener {
 
@@ -64,9 +68,24 @@ public class LoginActivity extends FragmentActivity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.login_button:
-			Intent intent = new Intent(LoginActivity.this,
-					DashboardActivity.class);
-			startActivity(intent);
+
+			String username = username_editfield.getText().toString();
+			String storename = storename_editfield.getText().toString();
+
+			if ((!TextUtils.isEmpty(username))
+					&& (!TextUtils.isEmpty(storename))) {
+
+				insertToDatabase(username, storename);
+
+				saveToPrefences(username, storename);
+
+				launchDashboardActivity();
+
+			} else {
+				Toast.makeText(LoginActivity.this,
+						"Please insert valid username and storename ",
+						Toast.LENGTH_SHORT).show();
+			}
 			break;
 
 		case R.id.cancel_button:
@@ -76,6 +95,24 @@ public class LoginActivity extends FragmentActivity implements OnClickListener {
 		default:
 			break;
 		}
+	}
+
+	private void launchDashboardActivity() {
+		Intent intent = new Intent(LoginActivity.this, DashboardActivity.class);
+		startActivity(intent);
+		finish();
+	}
+
+	private void saveToPrefences(String username, String storename) {
+		EmployeePrefrence.getInstance().setStringValue(
+				EmployeePrefrence.SET_USERNAME, username);
+		EmployeePrefrence.getInstance().setStringValue(
+				EmployeePrefrence.SET_STORENAME, storename);
+	}
+
+	private void insertToDatabase(String username , String storename) {
+		EmployeeSurveyDb.getInstance().insertUsernameStorename( username,
+				storename);
 	}
 
 }

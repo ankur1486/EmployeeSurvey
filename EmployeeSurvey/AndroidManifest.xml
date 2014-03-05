@@ -35,7 +35,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="src.com.employeesurvey.LoginActivity"
+            android:name="src.com.employeesurvey.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="landscape"
             android:windowSoftInputMode="stateAlwaysHidden" >
@@ -44,6 +44,12 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="src.com.employeesurvey.LoginActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateAlwaysHidden" >
         </activity>
         <activity
             android:name="src.com.employeesurvey.DashboardActivity"
