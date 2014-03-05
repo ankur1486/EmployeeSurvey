@@ -3,16 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
-    android:weightSum="6"
-    android:orientation="horizontal" >
-    
+    android:orientation="horizontal"
+    android:weightSum="6" >
+
     <TextView
         android:id="@+id/textView_groupId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="100dp"
         android:layout_weight="1"
         android:gravity="center"
+        android:minWidth="100dp"
         android:text="1"
         android:textColor="@android:color/black" />
 
@@ -20,8 +20,8 @@
         android:id="@+id/numberPicker_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="100dp"
         android:layout_weight="1"
+        android:minWidth="100dp"
         android:text="Number"
         android:textColor="@android:color/black" />
 
@@ -29,9 +29,9 @@
         android:id="@+id/textView_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="100dp"
         android:layout_weight="1"
         android:gravity="center"
+        android:minWidth="100dp"
         android:text="Time"
         android:textColor="@android:color/black" />
 
@@ -39,32 +39,32 @@
         android:id="@+id/textView_location"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="100dp"
         android:layout_weight="1"
-        android:text="Location"
         android:gravity="center"
+        android:minWidth="100dp"
+        android:text="Location"
         android:textColor="@android:color/black" />
 
     <ToggleButton
         android:id="@+id/button_add_delete"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="100dp"
-        android:button="@drawable/toggle_button"
-        android:background="@null"
-        android:textColor="@android:color/black"
-        android:gravity="center_horizontal"
         android:layout_weight="1"
-        android:textOff=""
-        android:textOn="" />
+        android:background="@null"
+        android:button="@drawable/toggle_button"
+        android:gravity="center_horizontal"
+        android:minWidth="100dp"
+        android:textColor="@android:color/black" 
+        android:textOn=""
+        android:textOff=""/>
 
     <CheckBox
         android:id="@+id/checkBox_form_completed"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:minWidth="100dp"
-        android:gravity="center"
         android:layout_weight="1"
+        android:gravity="center"
+        android:minWidth="100dp"
         android:textColor="@android:color/black" />
 
 </LinearLayout>

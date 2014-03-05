@@ -2,8 +2,14 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- When selected, use grey -->
-    <item android:drawable="@android:drawable/btn_minus" android:state_checked="true"/>
+    <!-- <item android:drawable="@android:drawable/btn_minus" android:state_checked="true"/> -->
     <!-- When not selected, use white -->
-    <item android:drawable="@android:drawable/btn_plus" android:state_checked="false"/>
+    <!-- <item android:drawable="@android:drawable/btn_plus" android:state_checked="false"/>  -->
+    
+    
+    <!-- When selected, use grey -->
+    <item android:drawable="@drawable/minus_icon" android:state_checked="true"/>
+    <!-- When not selected, use white -->
+    <item android:drawable="@drawable/add_icon" android:state_checked="false"/>
 
 </selector>

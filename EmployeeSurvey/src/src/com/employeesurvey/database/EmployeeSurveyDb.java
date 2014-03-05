@@ -30,7 +30,7 @@ public class EmployeeSurveyDb {
 	private static final String FIELD_LATITUDE = "latitude";
 	private static final String FIELD_lONGITUDE = "longitude";
 	private static final String FIELD_COMPLETED = "completed";
-	private static final String FIELD_DELETE = "delete";
+	private static final String FIELD_DELETE = "should_delete";
 
 	private final static String QUERY_LEFT_ROW_TABLE = "CREATE TABLE IF NOT EXISTS "
 			+ LEFT_ROW_DETAIL_TABLE
