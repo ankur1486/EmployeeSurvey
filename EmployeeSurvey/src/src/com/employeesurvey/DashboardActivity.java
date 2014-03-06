@@ -1,5 +1,6 @@
 package src.com.employeesurvey;
 
+import src.com.employeesurvey.database.EmployeeSurveyDb;
 import src.com.employeesurvey.prefrences.EmployeePrefrence;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -11,6 +12,14 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+/**
+ * 
+ * Dashboard class which will hold two fragments left and right .
+ * 
+ * Left fragment - person count , location etc 
+ * Right fragmnet - Group typ , age and gender 
+ *
+ */
 public class DashboardActivity extends FragmentActivity {
 
 	@Override
@@ -21,7 +30,7 @@ public class DashboardActivity extends FragmentActivity {
 
 		win.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
 				WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+		EmployeeSurveyDb.getInstance().getRowIdToSet();
 		setContentView(R.layout.dashboard_activity_layout);
 
 	}

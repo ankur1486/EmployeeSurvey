@@ -1,6 +1,7 @@
 package src.com.employeesurvey;
 
 import src.com.employeesurvey.adapter.LeftPanelListAdapter;
+import src.com.employeesurvey.database.EmployeeSurveyDb;
 import src.com.employeesurvey.prefrences.EmployeePrefrence;
 import src.com.employeesurvey.util.LocationUtils;
 import android.app.Activity;
@@ -14,6 +15,11 @@ import android.widget.ListView;
 
 import com.google.android.gms.location.LocationListener;
 
+/**
+ * Left fragment class which will hold the layout 
+ * 
+ *
+ */
 public class LeftFragment extends Fragment implements LocationListener {
 
 	private ListView mLeftPanelListView;
@@ -35,6 +41,7 @@ public class LeftFragment extends Fragment implements LocationListener {
 		View fragment = inflater.inflate(R.layout.leftpanel_layout, container);
 		try {
 			init(fragment);
+			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -43,10 +50,12 @@ public class LeftFragment extends Fragment implements LocationListener {
 	}
 
 	private void init(View fragment) {
+		
+		int listCount = EmployeeSurveyDb.getInstance().getLeftListCount();
 		mLeftPanelListView = (ListView) fragment
 				.findViewById(R.id.left_panel_listView);
 		LeftPanelListAdapter genderListAdapter = new LeftPanelListAdapter(
-				getActivity(), LeftFragment.this);
+				getActivity(), listCount , LeftFragment.this);
 		mLeftPanelListView.setAdapter(genderListAdapter);
 	}
 

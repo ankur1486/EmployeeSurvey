@@ -27,6 +27,7 @@ public class EmployeeSurveyDb {
 	private DatabaseWrapper databaseWrapper;
 	/** Internal access to database */
 	private SQLiteDatabase database;
+	private int lastRowId;
 
 	/**
 	 * username and storename table
@@ -50,6 +51,7 @@ public class EmployeeSurveyDb {
 
 	private static final String LEFT_ROW_DETAIL_TABLE = "left_row_detail";
 	private static final String FIELD_ROW_ID = "row_id";
+	private static final int FIELD_ROW_ID_COULMN_INDEX = 0;
 	private static final String FIELD_PERSON_COUNT = "person_count";
 	private static final String FIELD_TIME = "time";
 	private static final String FIELD_LATITUDE = "latitude";
@@ -72,10 +74,10 @@ public class EmployeeSurveyDb {
 			+ " TEXT, "
 			+ FIELD_COMPLETED
 			+ " INTEGER, " + FIELD_DELETE + " INTEGER);";
-	
+
 	/** Projection for getting value of an error key */
 	private final static String[] PROJECTION_LEFT_ROW_VALUE = { FIELD_ROW_ID,
-		FIELD_PERSON_COUNT, FIELD_TIME };
+			FIELD_PERSON_COUNT, FIELD_TIME };
 
 	/**
 	 * gender age grp and grp type table
@@ -231,8 +233,8 @@ public class EmployeeSurveyDb {
 		cv.put(FIELD_DELETE, delete);
 
 		long result = database.insert(LEFT_ROW_DETAIL_TABLE, null, cv);
-		
-		System.out.println("inserted left row to table "+result);
+
+		System.out.println("inserted left row to table " + result);
 
 		return result;
 	}
@@ -276,15 +278,50 @@ public class EmployeeSurveyDb {
 	 * @return A cursor with time stamp for particular error key
 	 */
 	public Cursor getLeftRowEntries(int deleteCheck) {
-		String whereClause = FIELD_DELETE +   "= ?";
+		String whereClause = FIELD_DELETE + "= ?";
 		String[] whereArgs = new String[] { "" + deleteCheck };
 		Cursor cursor = database.query(LEFT_ROW_DETAIL_TABLE,
-				PROJECTION_LEFT_ROW_VALUE, null, null, null, null,
-				null);
+				PROJECTION_LEFT_ROW_VALUE, null, null, null, null, null);
 
 		Log.d(TAG, "Returning getLeftRowEntries " + cursor.getCount());
 
 		return cursor;
+	}
+
+	/**
+	 * This method will return row Id of last row in table
+	 * 
+	 * @return int Row ID
+	 */
+	public int getRowIdToSet() {
+
+		Cursor cursor = database.query(LEFT_ROW_DETAIL_TABLE,
+				PROJECTION_LEFT_ROW_VALUE, null, null, null, null, null);
+
+		Log.d(TAG, "Returning getLeftRowEntries " + cursor.getCount());
+		cursor.moveToLast();
+		if (cursor.getCount() > 0) {
+
+			lastRowId = cursor.getInt(FIELD_ROW_ID_COULMN_INDEX);
+		}
+		Log.i(TAG, "last row ID" + lastRowId);
+		return ++lastRowId;
+	}
+
+	public int getLeftListCount() {
+
+		int count = 0;
+		Cursor cursor = database.query(LEFT_ROW_DETAIL_TABLE,
+				PROJECTION_LEFT_ROW_VALUE, null, null, null, null, null);
+
+		Log.d(TAG, "Returning getLeftRowEntries " + cursor.getCount());
+		if (cursor.getCount() == 0) {
+			++count;
+
+		} else {
+			count = cursor.getCount() + 1;
+		}
+		return count;
 	}
 
 	/**

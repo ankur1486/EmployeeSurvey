@@ -9,19 +9,22 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-public class RightFragment extends Fragment {
+public class RightFragment extends Fragment implements OnClickListener {
 
 	private ListView mGenderList;
 	private GenderListAdapter genderListAdapter;
 	private Spinner grpTypeSpinner;
+	private Button mSaveButton;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -39,10 +42,11 @@ public class RightFragment extends Fragment {
 	}
 
 	private void initGenderAgeGrpComponents(View fragment) {
-		System.out.println("*****************************88");
 		mGenderList = (ListView) fragment.findViewById(R.id.listView_gender);
 		genderListAdapter = new GenderListAdapter(getActivity());
 		mGenderList.setAdapter(genderListAdapter);
+
+		mSaveButton = (Button) fragment.findViewById(R.id.save_button);
 	}
 
 	public void updateList(int number) {
@@ -101,5 +105,17 @@ public class RightFragment extends Fragment {
 
 		}
 
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.save_button:
+
+			break;
+
+		default:
+			break;
+		}
 	}
 }

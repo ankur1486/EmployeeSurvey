@@ -7,6 +7,7 @@ import src.com.employeesurvey.R;
 import src.com.employeesurvey.RightFragment;
 import src.com.employeesurvey.database.EmployeeSurveyDb;
 import src.com.employeesurvey.prefrences.EmployeePrefrence;
+import src.com.employeesurvey.util.Constants;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -26,23 +27,31 @@ import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
 
+/**
+ * Left adapter class which will hold the id , person count , time , Location ,
+ * Add delete button and status is form completed or not.
+ * 
+ * 
+ */
 public class LeftPanelListAdapter extends BaseAdapter {
 
 	private Context mContext;
-	private int mCount = 1;
+	private int mCount;
 	private Fragment mFragment;
 	private String currentTime;
 	private String mLatitude;
 	private String mLongitude;
+	EmployeeLeftListMemberViewHolder holder = new EmployeeLeftListMemberViewHolder();;
 
-	public LeftPanelListAdapter(Context context, Fragment fragment) {
+	public LeftPanelListAdapter(Context context, int listCount,
+			Fragment fragment) {
 		mContext = context;
 		mFragment = fragment;
-
+		mCount = listCount;
 		mLatitude = EmployeePrefrence.getInstance().getStringValue(
-				EmployeePrefrence.SET_LATITUDE, "12.77");
+				EmployeePrefrence.SET_LATITUDE, Constants.DEFAULT_LATITUDE);
 		mLongitude = EmployeePrefrence.getInstance().getStringValue(
-				EmployeePrefrence.SET_LONGITUDE, "30.77");
+				EmployeePrefrence.SET_LONGITUDE, Constants.DEFAULT_LATITUDE);
 
 	}
 
@@ -67,49 +76,67 @@ public class LeftPanelListAdapter extends BaseAdapter {
 		return position;
 	}
 
+	private boolean toggleIsChecked;
+
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
-		View view;
-		if (convertView == null) {
+		View view = convertView;
+
+		if (view == null) {
 			LayoutInflater layoutInflater = LayoutInflater.from(mContext);
 			view = layoutInflater.inflate(R.layout.left_fragment_row, null);
+
+			holder = new EmployeeLeftListMemberViewHolder();
+
+			holder.addDeleteButton = (ToggleButton) view
+					.findViewById(R.id.button_add_delete);
+
+			holder.countButton = (Button) view
+					.findViewById(R.id.numberPicker_button);
+
+			holder.groupIdTextView = (TextView) view
+					.findViewById(R.id.textView_groupId);
+
+			holder.timeTextView = (TextView) view
+					.findViewById(R.id.textView_time);
+			holder.locationTextView = (TextView) view
+					.findViewById(R.id.textView_location);
+
+			view.setTag(holder);
+
 		} else {
-			view = convertView;
+
+			holder = (EmployeeLeftListMemberViewHolder) view.getTag();
 		}
 
-		ToggleButton addDeleteButton = (ToggleButton) view
-				.findViewById(R.id.button_add_delete);
-		addDeleteButton
+		holder.addDeleteButton
 				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
+
 						if (isChecked) {
-							EmployeeSurveyDb.getInstance().insertLeftRow(position, 0, currentTime, mLatitude, mLongitude, 1, 1);
-							mCount = mCount + 1;
+							EmployeeSurveyDb.getInstance().insertLeftRow(
+									position, 0, currentTime, mLatitude,
+									mLongitude, 1, 1);
+							mCount = EmployeeSurveyDb.getInstance().getLeftListCount() ;
 							notifyDataSetChanged();
-							
-							
+							toggleIsChecked = isChecked;
+
 						} else {
-							mCount = mCount - 1;
-							notifyDataSetChanged();
-							
-							EmployeeSurveyDb.getInstance().getLeftRowEntries(0);
+							showDeleteRowConfirmAlert();
 						}
 					}
 				});
 
-		addDeleteButton.setOnClickListener(new onClickAddDeleteButton(position,
-				mContext));
+//		holder.addDeleteButton.setOnClickListener(new onClickAddDeleteButton(
+//				position, toggleIsChecked, mContext));
 
-		final Button countButton = (Button) view
-				.findViewById(R.id.numberPicker_button);
-		countButton.setOnClickListener(new OnClickListener() {
+		holder.countButton.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				AlertDialog alertDialog = null;
 				LayoutInflater inflater = (LayoutInflater) mContext
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				View npView = inflater.inflate(
@@ -120,7 +147,7 @@ public class LeftPanelListAdapter extends BaseAdapter {
 				numberPicker.setMinValue(1);
 				numberPicker.setMaxValue(20);
 
-				alertDialog = new AlertDialog.Builder(mContext)
+				AlertDialog alertDialog = new AlertDialog.Builder(mContext)
 						.setTitle(R.string.number_of_persons_)
 						.setView(npView)
 						.setPositiveButton(R.string.ok,
@@ -136,7 +163,7 @@ public class LeftPanelListAdapter extends BaseAdapter {
 														R.id.right_fragmment);
 										rightFragment.updateList(index);
 
-										countButton.setText("" + index);
+										holder.countButton.setText("" + index);
 									}
 								})
 						.setNegativeButton(R.string.cancel,
@@ -153,20 +180,52 @@ public class LeftPanelListAdapter extends BaseAdapter {
 			}
 		});
 
-		TextView groupIdTextView = (TextView) view
-				.findViewById(R.id.textView_groupId);
-		groupIdTextView.setText("" + (1 + position));
-		TextView timeTextView = (TextView) view
-				.findViewById(R.id.textView_time);
+		holder.groupIdTextView.setText("" + (1 + position));
 
-		timeTextView.setText(getcurrentTime());
-		TextView locationTextView = (TextView) view
-				.findViewById(R.id.textView_location);
-		locationTextView.setText(mLatitude + " , " + mLongitude);
-		locationTextView.setOnClickListener(new OnLocationItemClickListener(
-				position, mContext));
+		holder.timeTextView.setText(getcurrentTime());
+
+		holder.locationTextView.setText(mLatitude + " , " + mLongitude);
+		holder.locationTextView
+				.setOnClickListener(new OnLocationItemClickListener(position,
+						mContext));
 		view.setOnClickListener(new OnItemClickListener(position, mContext));
 		return view;
+	}
+
+	/**
+	 * mAlert dialog to confirm whether user want to delete the particular row
+	 */
+	private void showDeleteRowConfirmAlert() {
+		new AlertDialog.Builder(mContext)
+				.setTitle(R.string.app_name)
+				.setMessage(R.string.are_you_sure_you_want_to_delete_this_row)
+				.setPositiveButton(android.R.string.yes,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								mCount = mCount - 1;
+								notifyDataSetChanged();
+
+								EmployeeSurveyDb.getInstance()
+										.getLeftRowEntries(0);
+							}
+						})
+				.setNegativeButton(android.R.string.no,
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog,
+									int which) {
+								dialog.cancel();
+
+							}
+						}).setIcon(R.drawable.ic_launcher).show();
+	}
+
+	static class EmployeeLeftListMemberViewHolder {
+		TextView locationTextView;
+		TextView timeTextView;
+		TextView groupIdTextView;
+		Button countButton;
+		ToggleButton addDeleteButton;
 	}
 
 }
@@ -179,16 +238,25 @@ public class LeftPanelListAdapter extends BaseAdapter {
 class onClickAddDeleteButton implements OnClickListener {
 	private int mPosition;
 	private Context mViewClickContext;
+	private boolean mToggleIsChecked;
 
-	onClickAddDeleteButton(int position, Context context) {
+	onClickAddDeleteButton(int position, boolean toggleIsChecked,
+			Context context) {
 		mPosition = position;
 		mViewClickContext = context;
+		mToggleIsChecked = toggleIsChecked;
 	}
 
 	public void onClick(View v) {
 
-		Toast.makeText(mViewClickContext, "View item clicked ",
-				Toast.LENGTH_SHORT).show();
+		if (mToggleIsChecked) {
+			Toast.makeText(mViewClickContext, "Toggle is add  ",
+					Toast.LENGTH_SHORT).show();
+			
+		} else {
+			Toast.makeText(mViewClickContext, "Toggle is delete ",
+					Toast.LENGTH_SHORT).show();
+		}
 
 	}
 }
@@ -204,8 +272,8 @@ class OnItemClickListener implements OnClickListener {
 
 	public void onClick(View v) {
 
-		Toast.makeText(mViewClickContext, "View item clicked ",
-				Toast.LENGTH_SHORT).show();
+		// Toast.makeText(mViewClickContext, "View item clicked ",
+		// Toast.LENGTH_SHORT).show();
 
 	}
 }

@@ -1,13 +1,17 @@
 package src.com.employeesurvey;
 
 import src.com.employeesurvey.prefrences.EmployeePrefrence;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.TextUtils;
 
-public class SplashActivity extends Activity {
+import com.google.android.gms.location.LocationListener;
+
+public class SplashActivity extends Activity implements LocationListener {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +61,21 @@ public class SplashActivity extends Activity {
 		Intent intent = new Intent(SplashActivity.this, LoginActivity.class);
 		startActivity(intent);
 		finish();
+	}
+
+	@Override
+	public void onLocationChanged(Location location) {
+		if (location != null) {
+			System.out.println("Spalsh Latitude :" + location.getLatitude());
+			System.out.println("Splash Longitude :" + location.getLongitude());
+
+			EmployeePrefrence.getInstance()
+					.setStringValue(EmployeePrefrence.SET_LATITUDE,
+							"" + location.getLatitude());
+			EmployeePrefrence.getInstance().setStringValue(
+					EmployeePrefrence.SET_LONGITUDE,
+					"" + location.getLongitude());
+		}
 	}
 
 }
