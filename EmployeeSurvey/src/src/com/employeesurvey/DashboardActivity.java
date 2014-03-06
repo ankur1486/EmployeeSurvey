@@ -4,6 +4,7 @@ import src.com.employeesurvey.database.EmployeeSurveyDb;
 import src.com.employeesurvey.prefrences.EmployeePrefrence;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
@@ -16,9 +17,9 @@ import android.widget.Toast;
  * 
  * Dashboard class which will hold two fragments left and right .
  * 
- * Left fragment - person count , location etc 
- * Right fragmnet - Group typ , age and gender 
- *
+ * Left fragment - person count , location etc Right fragmnet - Group typ , age
+ * and gender
+ * 
  */
 public class DashboardActivity extends FragmentActivity {
 
@@ -47,6 +48,13 @@ public class DashboardActivity extends FragmentActivity {
 		super.onOptionsItemSelected(item);
 
 		switch (item.getItemId()) {
+		case R.id.action_send_mail:
+
+			sendMail();
+			Toast.makeText(getBaseContext(), "You selected Logout",
+					Toast.LENGTH_SHORT).show();
+
+			break;
 		case R.id.action_logout:
 
 			showConfirmLogoutAlert();
@@ -57,6 +65,23 @@ public class DashboardActivity extends FragmentActivity {
 
 		}
 		return true;
+	}
+
+	private void sendMail() {
+		Intent sendemai = new Intent(Intent.ACTION_SEND);
+		sendemai.putExtra(Intent.EXTRA_EMAIL,
+				new String[] { "ankur1486@gmail.com" });
+		// sendemai.putExtra(Intent.EXTRA_CC, new String[] { emailadd });
+		sendemai.putExtra(
+				Intent.EXTRA_SUBJECT,
+				"Employee Data for user "
+						+ EmployeePrefrence.getInstance().getStringValue(
+								EmployeePrefrence.SET_USERNAME, ""));
+		sendemai.putExtra(Intent.EXTRA_TEXT, "Testing ");
+		// need this to prompts email client only
+		sendemai.setType("message/rfc822");
+		startActivity(Intent
+				.createChooser(sendemai, "Select email application"));
 	}
 
 	private void showConfirmLogoutAlert() {

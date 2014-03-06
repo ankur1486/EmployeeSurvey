@@ -3,6 +3,7 @@
 
     <string name="app_name">Employee Survey</string>
     <string name="action_logout">Logout</string>
+   <string name="action_send_mail">Send Mail </string>
     <string name="hello_world">Hello world!</string>
     <string name="welcome_screen_">"Welcome Screen "</string>
     <string name="login_screen_">"Login Form "</string>

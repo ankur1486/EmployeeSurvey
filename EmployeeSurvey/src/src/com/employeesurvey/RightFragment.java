@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import src.com.employeesurvey.adapter.GenderListAdapter;
+import src.com.employeesurvey.model.GenderAgeModel;
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -25,6 +26,8 @@ public class RightFragment extends Fragment implements OnClickListener {
 	private GenderListAdapter genderListAdapter;
 	private Spinner grpTypeSpinner;
 	private Button mSaveButton;
+	private String mGroupType;
+	private List<GenderAgeModel> mGenderAgeArrayList = new ArrayList<GenderAgeModel>();
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -43,7 +46,8 @@ public class RightFragment extends Fragment implements OnClickListener {
 
 	private void initGenderAgeGrpComponents(View fragment) {
 		mGenderList = (ListView) fragment.findViewById(R.id.listView_gender);
-		genderListAdapter = new GenderListAdapter(getActivity());
+		genderListAdapter = new GenderListAdapter(getActivity(),
+				mGenderAgeArrayList);
 		mGenderList.setAdapter(genderListAdapter);
 
 		mSaveButton = (Button) fragment.findViewById(R.id.save_button);
@@ -74,6 +78,7 @@ public class RightFragment extends Fragment implements OnClickListener {
 
 		grpTypeSpinner.setAdapter(dataAdapter);
 
+//		grpTypeSpinner.setSelection(3);
 		// Spinner item selection Listener
 		addListenerOnSpinnerItemSelection();
 	}
@@ -89,20 +94,23 @@ public class RightFragment extends Fragment implements OnClickListener {
 	protected class CustomOnItemSelectedListener implements
 			OnItemSelectedListener {
 
+		private int mGroupInt;
+
 		public void onItemSelected(AdapterView<?> parent, View view, int pos,
 				long id) {
 
 			Toast.makeText(
 					parent.getContext(),
 					"On Item Select : \n"
-							+ parent.getItemAtPosition(pos).toString(),
+							+ parent.getItemAtPosition(pos).toString() + "view pos " +parent.getPositionForView(view),
 					Toast.LENGTH_LONG).show();
+			mGroupInt = parent.getPositionForView(view);
+			mGroupType = parent.getItemAtPosition(pos).toString();
+
 		}
 
 		@Override
 		public void onNothingSelected(AdapterView<?> arg0) {
-			// TODO Auto-generated method stub
-
 		}
 
 	}
@@ -111,6 +119,20 @@ public class RightFragment extends Fragment implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.save_button:
+
+			if (genderListAdapter != null) {
+				List<GenderAgeModel> genderAgeModelsList = genderListAdapter
+						.getUpdatedGenderAgeGrp();
+				if (genderAgeModelsList != null
+						&& genderAgeModelsList.size() > 0) {
+						
+				}
+			}
+
+			// for (int i = 0; i < array.length; i++) {
+			// EmployeeSurveyDb.getInstance().insertGenderRow(rowID, genderType,
+			// ageGroup);
+			// }
 
 			break;
 

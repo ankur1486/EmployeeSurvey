@@ -120,7 +120,8 @@ public class LeftPanelListAdapter extends BaseAdapter {
 							EmployeeSurveyDb.getInstance().insertLeftRow(
 									position, 0, currentTime, mLatitude,
 									mLongitude, 1, 1);
-							mCount = EmployeeSurveyDb.getInstance().getLeftListCount() ;
+							mCount = EmployeeSurveyDb.getInstance()
+									.getLeftListCount();
 							notifyDataSetChanged();
 							toggleIsChecked = isChecked;
 
@@ -130,8 +131,8 @@ public class LeftPanelListAdapter extends BaseAdapter {
 					}
 				});
 
-//		holder.addDeleteButton.setOnClickListener(new onClickAddDeleteButton(
-//				position, toggleIsChecked, mContext));
+		// holder.addDeleteButton.setOnClickListener(new onClickAddDeleteButton(
+		// position, toggleIsChecked, mContext));
 
 		holder.countButton.setOnClickListener(new OnClickListener() {
 
@@ -252,7 +253,7 @@ class onClickAddDeleteButton implements OnClickListener {
 		if (mToggleIsChecked) {
 			Toast.makeText(mViewClickContext, "Toggle is add  ",
 					Toast.LENGTH_SHORT).show();
-			
+
 		} else {
 			Toast.makeText(mViewClickContext, "Toggle is delete ",
 					Toast.LENGTH_SHORT).show();
@@ -272,8 +273,8 @@ class OnItemClickListener implements OnClickListener {
 
 	public void onClick(View v) {
 
-		// Toast.makeText(mViewClickContext, "View item clicked ",
-		// Toast.LENGTH_SHORT).show();
+		Toast.makeText(mViewClickContext, "View item clicked ",
+				Toast.LENGTH_SHORT).show();
 
 	}
 }
