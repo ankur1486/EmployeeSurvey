@@ -10,7 +10,7 @@ public class GenderAgeModel implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private String gender;
 	private String ageGrp;
-	private String grpType;
+	private int rowId;
 
 	public String getGender() {
 		return gender;
@@ -28,12 +28,12 @@ public class GenderAgeModel implements Serializable {
 		this.ageGrp = ageGrp;
 	}
 
-	public String getGrpType() {
-		return grpType;
+	public int getrowId() {
+		return rowId;
 	}
 
-	public void setGrpType(String grpType) {
-		this.grpType = grpType;
+	public void setrowId(int grpType) {
+		this.rowId = rowId;
 	}
 
 }

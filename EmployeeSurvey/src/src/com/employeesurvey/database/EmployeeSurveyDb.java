@@ -1,5 +1,9 @@
 package src.com.employeesurvey.database;
 
+import java.util.ArrayList;
+
+import src.com.employeesurvey.model.EmployeeModel;
+import src.com.employeesurvey.model.GenderAgeModel;
 import src.com.employeesurvey.util.Constants;
 import android.app.Application;
 import android.content.ContentValues;
@@ -53,12 +57,18 @@ public class EmployeeSurveyDb {
 	private static final String FIELD_ROW_ID = "row_id";
 	private static final int FIELD_ROW_ID_COULMN_INDEX = 0;
 	private static final String FIELD_PERSON_COUNT = "person_count";
+	private static final int FIELD_PERSON_COUNT_COULMN_INDEX = 1;
 	private static final String FIELD_TIME = "time";
+	private static final int FIELD_TIME_COULMN_INDEX = 2;
 	private static final String FIELD_LATITUDE = "latitude";
+	private static final int FIELD_LATITUDE_COULMN_INDEX = 3;
 	private static final String FIELD_lONGITUDE = "longitude";
+	private static final int FIELD_lONGITUDE_COULMN_INDEX = 4;
 	private static final String FIELD_COMPLETED = "completed";
+	private static final int FIELD_COMPLETED_COULMN_INDEX = 5;
 	private static final String FIELD_DELETE = "should_delete";
-
+	private static final int FIELD_DELETE_COULMN_INDEX = 6;
+ 
 	private final static String QUERY_LEFT_ROW_TABLE = "CREATE TABLE IF NOT EXISTS "
 			+ LEFT_ROW_DETAIL_TABLE
 			+ " ("
@@ -77,21 +87,24 @@ public class EmployeeSurveyDb {
 
 	/** Projection for getting value of an error key */
 	private final static String[] PROJECTION_LEFT_ROW_VALUE = { FIELD_ROW_ID,
-			FIELD_PERSON_COUNT, FIELD_TIME };
+			FIELD_PERSON_COUNT, FIELD_TIME, FIELD_LATITUDE, FIELD_lONGITUDE, FIELD_COMPLETED,  FIELD_DELETE};
 
 	/**
 	 * gender age grp and grp type table
 	 */
 	public static final String GENDER_DETAIL_TABLE = "gender_detail";
+	
 	private static final String FIELD_GENDER_TYPE = "gender_type";
+	private static final int FIELD_GENDER_TYPE_COULMN_INDEX = 1;
 	private static final String FIELD_AGE_GROUP = "age_group";
+	private static final int FIELD_AGE_GROUP_COULMN_INDEX = 2;
 
 	private final static String QUERY_GENDER_TABLE = "CREATE TABLE IF NOT EXISTS "
 			+ GENDER_DETAIL_TABLE
 			+ " ("
 			+ FIELD_ROW_ID
-			+ " TEXT, "
-			+ FIELD_GENDER_TYPE + " TEXT, " + FIELD_AGE_GROUP + " INTEGER);";
+			+ " INTEGER, "
+			+ FIELD_GENDER_TYPE + " TEXT, " + FIELD_AGE_GROUP + " TEXT);";
 
 	/** Projection for getting value of an error key */
 	private final static String[] PROJECTION_GENDER_VALUE = { FIELD_ROW_ID,
@@ -308,6 +321,10 @@ public class EmployeeSurveyDb {
 		return ++lastRowId;
 	}
 
+	/**
+	 * This method will give total number of rows in Db
+	 * @return int row count
+	 */
 	public int getLeftListCount() {
 
 		int count = 0;
@@ -323,7 +340,42 @@ public class EmployeeSurveyDb {
 		}
 		return count;
 	}
+	
+	public void deleteLeftRow(String rowId){
+		String whereClause = FIELD_ROW_ID + "= ?";
+		String[] whereArgs = new String[] { rowId };
+		int rowsDeleted = database.delete(LEFT_ROW_DETAIL_TABLE,whereClause,whereArgs);
+	}
 
+	public void getDataModelForList(){
+		ArrayList<EmployeeModel> employeeModelList = new ArrayList<EmployeeModel>();
+		Cursor cursor = database.query(LEFT_ROW_DETAIL_TABLE,
+				PROJECTION_LEFT_ROW_VALUE, null, null, null, null, null);
+		cursor.moveToFirst();
+		while(!cursor.isAfterLast()){
+			EmployeeModel employeeModel = new EmployeeModel();
+			employeeModel.setFormCompleted(cursor.getInt(FIELD_COMPLETED_COULMN_INDEX));
+			employeeModel.setLatitude(cursor.getString(FIELD_LATITUDE_COULMN_INDEX));
+			employeeModel.setLongitude(cursor.getString(FIELD_lONGITUDE_COULMN_INDEX));
+			employeeModel.setPersonCount(cursor.getInt(FIELD_PERSON_COUNT_COULMN_INDEX));
+			employeeModel.setTime(cursor.getString(FIELD_TIME_COULMN_INDEX));
+			employeeModel.setRowId(cursor.getInt(FIELD_ROW_ID_COULMN_INDEX));
+			Cursor genderAgecursor = database.query(GENDER_DETAIL_TABLE,
+					PROJECTION_GENDER_VALUE, null, null, null, null, null);
+			genderAgecursor.moveToFirst();
+			ArrayList<GenderAgeModel> genderAgeModelList = new ArrayList<GenderAgeModel>();
+			while (!genderAgecursor.isAfterLast()) {
+				GenderAgeModel genderAgeModel = new GenderAgeModel();
+				genderAgeModel.setrowId(cursor.getInt(FIELD_ROW_ID_COULMN_INDEX));
+				genderAgeModel.setGender(cursor.getString(FIELD_GENDER_TYPE_COULMN_INDEX));
+				genderAgeModel.setAgeGrp(cursor.getString(FIELD_AGE_GROUP_COULMN_INDEX));
+				genderAgeModelList.add(genderAgecursor.getCount(),genderAgeModel);
+			}
+			employeeModel.setGenderAgeModel(genderAgeModelList);
+			employeeModelList.set(cursor.getPosition(), employeeModel);
+			cursor.moveToNext();
+		}
+	}
 	/**
 	 * Private class that extends the SQLite helper class.
 	 * 

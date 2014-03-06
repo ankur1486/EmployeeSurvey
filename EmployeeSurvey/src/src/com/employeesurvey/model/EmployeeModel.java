@@ -1,6 +1,7 @@
 package src.com.employeesurvey.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class EmployeeModel implements Serializable {
 
@@ -13,8 +14,27 @@ public class EmployeeModel implements Serializable {
 	private String time;
 	private String latitude;
 	private String longitude;
-	private String buttonAddDelete;
-	private boolean formCompleted;
+	private int buttonAddDelete;
+	private int formCompleted;
+	private int rowId;
+	
+	public int getRowId() {
+		return rowId;
+	}
+
+	public void setRowId(int rowId) {
+		this.rowId = rowId;
+	}
+
+	private ArrayList<GenderAgeModel> genderAgeModel;
+
+	public ArrayList<GenderAgeModel> getGenderAgeModel() {
+		return genderAgeModel;
+	}
+
+	public void setGenderAgeModel(ArrayList<GenderAgeModel> genderAgeModel) {
+		this.genderAgeModel = genderAgeModel;
+	}
 
 	public int getPersonCount() {
 		return personCount;
@@ -48,19 +68,19 @@ public class EmployeeModel implements Serializable {
 		this.longitude = longitude;
 	}
 
-	public String getButtonAddDelete() {
+	public int getButtonAddDelete() {
 		return buttonAddDelete;
 	}
 
-	public void setButtonAddDelete(String buttonAddDelete) {
+	public void setButtonAddDelete(int buttonAddDelete) {
 		this.buttonAddDelete = buttonAddDelete;
 	}
 
-	public boolean isFormCompleted() {
+	public int isFormCompleted() {
 		return formCompleted;
 	}
 
-	public void setFormCompleted(boolean formCompleted) {
+	public void setFormCompleted(int formCompleted) {
 		this.formCompleted = formCompleted;
 	}
 }
