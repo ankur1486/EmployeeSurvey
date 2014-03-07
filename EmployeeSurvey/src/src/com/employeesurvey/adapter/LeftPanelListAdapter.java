@@ -1,11 +1,14 @@
 package src.com.employeesurvey.adapter;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 import src.com.employeesurvey.R;
 import src.com.employeesurvey.RightFragment;
 import src.com.employeesurvey.database.EmployeeSurveyDb;
+import src.com.employeesurvey.model.EmployeeModel;
+import src.com.employeesurvey.model.GenderAgeModel;
 import src.com.employeesurvey.prefrences.EmployeePrefrence;
 import src.com.employeesurvey.util.Constants;
 import android.app.AlertDialog;
@@ -14,6 +17,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,19 +39,21 @@ import android.widget.ToggleButton;
  */
 public class LeftPanelListAdapter extends BaseAdapter {
 
+	protected static final String TAG = LeftPanelListAdapter.class
+			.getSimpleName();
 	private Context mContext;
-	private int mCount;
 	private Fragment mFragment;
 	private String currentTime;
 	private String mLatitude;
 	private String mLongitude;
-	EmployeeLeftListMemberViewHolder holder = new EmployeeLeftListMemberViewHolder();;
+	EmployeeLeftListMemberViewHolder holder = new EmployeeLeftListMemberViewHolder();
+	private ArrayList<EmployeeModel> mEmployeeModel;;
 
-	public LeftPanelListAdapter(Context context, int listCount,
-			Fragment fragment) {
+	public LeftPanelListAdapter(Context context,
+			ArrayList<EmployeeModel> employeeModels, Fragment fragment) {
 		mContext = context;
 		mFragment = fragment;
-		mCount = listCount;
+		mEmployeeModel = employeeModels;
 		mLatitude = EmployeePrefrence.getInstance().getStringValue(
 				EmployeePrefrence.SET_LATITUDE, Constants.DEFAULT_LATITUDE);
 		mLongitude = EmployeePrefrence.getInstance().getStringValue(
@@ -63,7 +69,7 @@ public class LeftPanelListAdapter extends BaseAdapter {
 
 	@Override
 	public int getCount() {
-		return mCount;
+		return mEmployeeModel.size();
 	}
 
 	@Override
@@ -109,6 +115,8 @@ public class LeftPanelListAdapter extends BaseAdapter {
 			holder = (EmployeeLeftListMemberViewHolder) view.getTag();
 		}
 
+		EmployeeModel employeeModel = mEmployeeModel.get(position);
+
 		holder.addDeleteButton
 				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -120,17 +128,33 @@ public class LeftPanelListAdapter extends BaseAdapter {
 							EmployeeSurveyDb.getInstance().insertLeftRow(
 									position, 0, currentTime, mLatitude,
 									mLongitude, 1, 1);
-							mCount = EmployeeSurveyDb.getInstance()
+							int leftListCount = EmployeeSurveyDb.getInstance()
 									.getLeftListCount();
+							String latitude = EmployeePrefrence.getInstance()
+									.getStringValue(
+											EmployeePrefrence.SET_LATITUDE, "");
+							String longitude = EmployeePrefrence
+									.getInstance()
+									.getStringValue(
+											EmployeePrefrence.SET_LONGITUDE, "");
+
+							EmployeeSurveyDb.getInstance().insertLeftRow(
+									leftListCount, 0,
+									"" + System.currentTimeMillis(), latitude,
+									longitude, 0, 0);
+							mEmployeeModel = EmployeeSurveyDb.getInstance()
+									.getDataModelForList();
+							Log.w(TAG, "Total left row" + mEmployeeModel.size());
 							notifyDataSetChanged();
 							toggleIsChecked = isChecked;
 
 						} else {
-							showDeleteRowConfirmAlert();
+							showDeleteRowConfirmAlert(position);
 						}
 					}
 				});
 
+		holder.countButton.setText("" + employeeModel.getPersonCount());
 		// holder.addDeleteButton.setOnClickListener(new onClickAddDeleteButton(
 		// position, toggleIsChecked, mContext));
 
@@ -158,14 +182,40 @@ public class LeftPanelListAdapter extends BaseAdapter {
 											int whichButton) {
 
 										int index = numberPicker.getValue();
-										RightFragment rightFragment = (RightFragment) mFragment
-												.getFragmentManager()
-												.findFragmentById(
-														R.id.right_fragmment);
-										rightFragment.updateList(index);
-
+										EmployeeSurveyDb
+												.getInstance()
+												.updatePersonCount(
+														""
+																+ mEmployeeModel
+																		.get(position)
+																		.getRowId(),
+														index);
+										
+										for (int i = 0; i < index; i++) {
+											GenderAgeModel genderAgeModel = new GenderAgeModel();
+											EmployeeSurveyDb
+													.getInstance()
+													.insertGenderRow(
+															mEmployeeModel.get(
+																	position)
+																	.getRowId(),
+															genderAgeModel
+																	.getGender(),
+															genderAgeModel
+																	.getAgeGrp(),
+															genderAgeModel
+																	.getGroupType());
+										}
+										updateRightFragment(position);
+										mEmployeeModel = EmployeeSurveyDb
+												.getInstance()
+												.getDataModelForList();
+										Log.w(TAG, "Total left row"
+												+ mEmployeeModel.size());
+										notifyDataSetChanged();
 										holder.countButton.setText("" + index);
 									}
+
 								})
 						.setNegativeButton(R.string.cancel,
 								new DialogInterface.OnClickListener() {
@@ -183,9 +233,10 @@ public class LeftPanelListAdapter extends BaseAdapter {
 
 		holder.groupIdTextView.setText("" + (1 + position));
 
-		holder.timeTextView.setText(getcurrentTime());
+		holder.timeTextView.setText(employeeModel.getTime());
 
-		holder.locationTextView.setText(mLatitude + " , " + mLongitude);
+		holder.locationTextView.setText(employeeModel.getLatitude() + " , "
+				+ employeeModel.getLongitude());
 		holder.locationTextView
 				.setOnClickListener(new OnLocationItemClickListener(position,
 						mContext));
@@ -196,7 +247,7 @@ public class LeftPanelListAdapter extends BaseAdapter {
 	/**
 	 * mAlert dialog to confirm whether user want to delete the particular row
 	 */
-	private void showDeleteRowConfirmAlert() {
+	private void showDeleteRowConfirmAlert(final int position) {
 		new AlertDialog.Builder(mContext)
 				.setTitle(R.string.app_name)
 				.setMessage(R.string.are_you_sure_you_want_to_delete_this_row)
@@ -204,11 +255,17 @@ public class LeftPanelListAdapter extends BaseAdapter {
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
-								mCount = mCount - 1;
+								EmployeeSurveyDb.getInstance().deleteLeftRow(
+										""
+												+ mEmployeeModel.get(position)
+														.getRowId());
+								mEmployeeModel = EmployeeSurveyDb.getInstance()
+										.getDataModelForList();
+								Log.w(TAG,
+										"Total left row"
+												+ mEmployeeModel.size());
 								notifyDataSetChanged();
 
-								EmployeeSurveyDb.getInstance()
-										.getLeftRowEntries(0);
 							}
 						})
 				.setNegativeButton(android.R.string.no,
@@ -227,6 +284,13 @@ public class LeftPanelListAdapter extends BaseAdapter {
 		TextView groupIdTextView;
 		Button countButton;
 		ToggleButton addDeleteButton;
+	}
+
+	private void updateRightFragment(int position) {
+		RightFragment rightFragment = (RightFragment) mFragment
+				.getFragmentManager().findFragmentById(R.id.right_fragmment);
+		rightFragment.updateList(mEmployeeModel.get(position)
+				.getGenderAgeModel(), mEmployeeModel.get(position).getRowId());
 	}
 
 }
@@ -277,6 +341,7 @@ class OnItemClickListener implements OnClickListener {
 				Toast.LENGTH_SHORT).show();
 
 	}
+
 }
 
 class OnLocationItemClickListener implements OnClickListener {

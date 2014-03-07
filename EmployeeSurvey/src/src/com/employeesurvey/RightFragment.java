@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import src.com.employeesurvey.adapter.GenderListAdapter;
+import src.com.employeesurvey.database.EmployeeSurveyDb;
 import src.com.employeesurvey.model.GenderAgeModel;
 import android.app.Activity;
 import android.os.Bundle;
@@ -27,8 +28,8 @@ public class RightFragment extends Fragment implements OnClickListener {
 	private Spinner grpTypeSpinner;
 	private Button mSaveButton;
 	private String mGroupType;
-	private List<GenderAgeModel> mGenderAgeArrayList = new ArrayList<GenderAgeModel>();
-
+	private ArrayList<GenderAgeModel> mGenderAgeArrayList = new ArrayList<GenderAgeModel>();
+	private int mRowID;
 	@Override
 	public void onAttach(Activity activity) {
 		// TODO Auto-generated method stub
@@ -53,9 +54,10 @@ public class RightFragment extends Fragment implements OnClickListener {
 		mSaveButton = (Button) fragment.findViewById(R.id.save_button);
 	}
 
-	public void updateList(int number) {
+	public void updateList(ArrayList<GenderAgeModel> arrayList, int rowId) {
+		mRowID = rowId;
 		if (genderListAdapter != null) {
-			genderListAdapter.setNumberOfCounts(number);
+			genderListAdapter.setNumberOfCounts(arrayList);
 		}
 	}
 
@@ -125,14 +127,13 @@ public class RightFragment extends Fragment implements OnClickListener {
 						.getUpdatedGenderAgeGrp();
 				if (genderAgeModelsList != null
 						&& genderAgeModelsList.size() > 0) {
-						
+					 for (int i = 0; i < genderAgeModelsList.size(); i++) {
+					 EmployeeSurveyDb.getInstance().insertGenderRow(mRowID, genderAgeModelsList.get(i).getGender(), genderAgeModelsList.get(i).getAgeGrp(),mGroupType);
+					 }
 				}
 			}
 
-			// for (int i = 0; i < array.length; i++) {
-			// EmployeeSurveyDb.getInstance().insertGenderRow(rowID, genderType,
-			// ageGroup);
-			// }
+			
 
 			break;
 

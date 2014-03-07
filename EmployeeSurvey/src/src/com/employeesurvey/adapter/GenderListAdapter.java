@@ -19,24 +19,23 @@ import android.widget.Toast;
 public class GenderListAdapter extends BaseAdapter {
 
 	private Context mContext;
-	private int mCount = 0;
+	private ArrayList<GenderAgeModel> mGenderAgeModel ;
 
-	private List<GenderAgeModel> mGenderAgeModelList = new ArrayList<GenderAgeModel>();
 
 	public GenderListAdapter(Context context,
-			List<GenderAgeModel> genderAgeModelsList) {
+			ArrayList<GenderAgeModel> genderAgeModelsList) {
 		mContext = context;
-		mGenderAgeModelList = genderAgeModelsList;
+		mGenderAgeModel = genderAgeModelsList;
 	}
 
-	public void setNumberOfCounts(int count) {
-		mCount = count;
+	public void setNumberOfCounts(ArrayList<GenderAgeModel> genderAgeModel) {
+		mGenderAgeModel = genderAgeModel;
 		notifyDataSetChanged();
 	}
 
 	@Override
 	public int getCount() {
-		return mCount;
+		return mGenderAgeModel.size();
 	}
 
 	@Override
@@ -74,7 +73,7 @@ public class GenderListAdapter extends BaseAdapter {
 						Toast.makeText(mContext, "Switch 1 is " + state,
 								Toast.LENGTH_LONG).show();
 
-						mGenderAgeModelList.get(position).setGender(state);
+						mGenderAgeModel.get(position).setGender(state);
 					}
 				});
 
@@ -91,7 +90,7 @@ public class GenderListAdapter extends BaseAdapter {
 						Toast.makeText(mContext, "checkedId :" + value,
 								Toast.LENGTH_SHORT).show();
 
-						mGenderAgeModelList.get(position).setAgeGrp(value);
+						mGenderAgeModel.get(position).setAgeGrp(value);
 					}
 				});
 
@@ -99,8 +98,8 @@ public class GenderListAdapter extends BaseAdapter {
 	}
 
 	public List<GenderAgeModel> getUpdatedGenderAgeGrp() {
-		if (mGenderAgeModelList != null && mGenderAgeModelList.size() > 0) {
-			return mGenderAgeModelList;
+		if (mGenderAgeModel != null && mGenderAgeModel.size() > 0) {
+			return mGenderAgeModel;
 		}
 		return null;
 	}

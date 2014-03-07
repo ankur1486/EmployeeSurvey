@@ -8,9 +8,18 @@ public class GenderAgeModel implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private String gender;
-	private String ageGrp;
+	private String gender = "female";
+	private String ageGrp = "0-10";
 	private int rowId;
+	private String groupType="Friends";
+
+	public String getGroupType() {
+		return groupType;
+	}
+
+	public void setGroupType(String groupType) {
+		this.groupType = groupType;
+	}
 
 	public String getGender() {
 		return gender;

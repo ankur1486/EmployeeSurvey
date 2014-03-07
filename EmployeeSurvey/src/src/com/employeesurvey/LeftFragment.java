@@ -1,7 +1,10 @@
 package src.com.employeesurvey;
 
+import java.util.ArrayList;
+
 import src.com.employeesurvey.adapter.LeftPanelListAdapter;
 import src.com.employeesurvey.database.EmployeeSurveyDb;
+import src.com.employeesurvey.model.EmployeeModel;
 import src.com.employeesurvey.prefrences.EmployeePrefrence;
 import src.com.employeesurvey.util.LocationUtils;
 import android.app.Activity;
@@ -51,11 +54,13 @@ public class LeftFragment extends Fragment implements LocationListener {
 
 	private void init(View fragment) {
 		
-		int listCount = EmployeeSurveyDb.getInstance().getLeftListCount();
+		ArrayList<EmployeeModel> employeeModels = EmployeeSurveyDb.getInstance().getDataModelForList();
+		
+//		int listCount = EmployeeSurveyDb.getInstance().getLeftListCount();
 		mLeftPanelListView = (ListView) fragment
 				.findViewById(R.id.left_panel_listView);
 		LeftPanelListAdapter genderListAdapter = new LeftPanelListAdapter(
-				getActivity(), listCount , LeftFragment.this);
+				getActivity(), employeeModels , LeftFragment.this);
 		mLeftPanelListView.setAdapter(genderListAdapter);
 	}
 

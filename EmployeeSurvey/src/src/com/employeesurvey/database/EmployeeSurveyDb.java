@@ -68,7 +68,7 @@ public class EmployeeSurveyDb {
 	private static final int FIELD_COMPLETED_COULMN_INDEX = 5;
 	private static final String FIELD_DELETE = "should_delete";
 	private static final int FIELD_DELETE_COULMN_INDEX = 6;
- 
+
 	private final static String QUERY_LEFT_ROW_TABLE = "CREATE TABLE IF NOT EXISTS "
 			+ LEFT_ROW_DETAIL_TABLE
 			+ " ("
@@ -87,28 +87,31 @@ public class EmployeeSurveyDb {
 
 	/** Projection for getting value of an error key */
 	private final static String[] PROJECTION_LEFT_ROW_VALUE = { FIELD_ROW_ID,
-			FIELD_PERSON_COUNT, FIELD_TIME, FIELD_LATITUDE, FIELD_lONGITUDE, FIELD_COMPLETED,  FIELD_DELETE};
+			FIELD_PERSON_COUNT, FIELD_TIME, FIELD_LATITUDE, FIELD_lONGITUDE,
+			FIELD_COMPLETED, FIELD_DELETE };
 
 	/**
 	 * gender age grp and grp type table
 	 */
 	public static final String GENDER_DETAIL_TABLE = "gender_detail";
-	
+
 	private static final String FIELD_GENDER_TYPE = "gender_type";
 	private static final int FIELD_GENDER_TYPE_COULMN_INDEX = 1;
 	private static final String FIELD_AGE_GROUP = "age_group";
 	private static final int FIELD_AGE_GROUP_COULMN_INDEX = 2;
+	private static final String FIELD_GROUP_TYPE = "group_type";
+	private static final int FIELD_GROUP_TYPE_COULMN_INDEX = 3;
 
 	private final static String QUERY_GENDER_TABLE = "CREATE TABLE IF NOT EXISTS "
 			+ GENDER_DETAIL_TABLE
 			+ " ("
 			+ FIELD_ROW_ID
 			+ " INTEGER, "
-			+ FIELD_GENDER_TYPE + " TEXT, " + FIELD_AGE_GROUP + " TEXT);";
+			+ FIELD_GENDER_TYPE + " TEXT, " + FIELD_AGE_GROUP + " TEXT, " + FIELD_GROUP_TYPE + " TEXT);";
 
 	/** Projection for getting value of an error key */
 	private final static String[] PROJECTION_GENDER_VALUE = { FIELD_ROW_ID,
-			FIELD_GENDER_TYPE, FIELD_AGE_GROUP };
+			FIELD_GENDER_TYPE, FIELD_AGE_GROUP, FIELD_GROUP_TYPE};
 
 	/**
 	 * Private constructor, enforces use of singleton
@@ -237,7 +240,7 @@ public class EmployeeSurveyDb {
 		// Create object holding values
 		ContentValues cv = new ContentValues();
 
-		// cv.put(FIELD_ROW_ID, rowID);
+		cv.put(FIELD_ROW_ID, rowID);
 		cv.put(FIELD_PERSON_COUNT, personCount);
 		cv.put(FIELD_TIME, time);
 		cv.put(FIELD_LATITUDE, latitude);
@@ -253,7 +256,7 @@ public class EmployeeSurveyDb {
 	}
 
 	public synchronized long insertGenderRow(int rowID, String genderType,
-			int ageGroup) {
+			String ageGroup,String groupType) {
 
 		// Create object holding values
 		ContentValues cv = new ContentValues();
@@ -261,8 +264,29 @@ public class EmployeeSurveyDb {
 		cv.put(FIELD_ROW_ID, rowID);
 		cv.put(FIELD_GENDER_TYPE, genderType);
 		cv.put(FIELD_AGE_GROUP, ageGroup);
-
+		cv.put(FIELD_GROUP_TYPE, groupType);
 		long result = database.insert(GENDER_DETAIL_TABLE, null, cv);
+
+		return result;
+	}
+	
+	/**
+	 * This method will update person count against row ID
+	 * 
+	 * @param rowID
+	 * @param personCount
+	 * @return long number of rows affected
+	 */
+	public synchronized long updatePersonCount(String rowID, int personCount) {
+
+		String whereClause = FIELD_ROW_ID + "=?";
+		String[] whereArgs = new String[] { rowID };
+		// Create object holding values
+		ContentValues cv = new ContentValues();
+
+		cv.put(FIELD_PERSON_COUNT, personCount);
+		
+		long result = database.update(LEFT_ROW_DETAIL_TABLE,cv,whereClause,whereArgs);
 
 		return result;
 	}
@@ -323,6 +347,7 @@ public class EmployeeSurveyDb {
 
 	/**
 	 * This method will give total number of rows in Db
+	 * 
 	 * @return int row count
 	 */
 	public int getLeftListCount() {
@@ -340,24 +365,29 @@ public class EmployeeSurveyDb {
 		}
 		return count;
 	}
-	
-	public void deleteLeftRow(String rowId){
+
+	public void deleteLeftRow(String rowId) {
 		String whereClause = FIELD_ROW_ID + "= ?";
 		String[] whereArgs = new String[] { rowId };
-		int rowsDeleted = database.delete(LEFT_ROW_DETAIL_TABLE,whereClause,whereArgs);
+		int rowsDeleted = database.delete(LEFT_ROW_DETAIL_TABLE, whereClause,
+				whereArgs);
 	}
 
-	public void getDataModelForList(){
+	public ArrayList<EmployeeModel> getDataModelForList() {
 		ArrayList<EmployeeModel> employeeModelList = new ArrayList<EmployeeModel>();
 		Cursor cursor = database.query(LEFT_ROW_DETAIL_TABLE,
 				PROJECTION_LEFT_ROW_VALUE, null, null, null, null, null);
 		cursor.moveToFirst();
-		while(!cursor.isAfterLast()){
+		while (!cursor.isAfterLast()) {
 			EmployeeModel employeeModel = new EmployeeModel();
-			employeeModel.setFormCompleted(cursor.getInt(FIELD_COMPLETED_COULMN_INDEX));
-			employeeModel.setLatitude(cursor.getString(FIELD_LATITUDE_COULMN_INDEX));
-			employeeModel.setLongitude(cursor.getString(FIELD_lONGITUDE_COULMN_INDEX));
-			employeeModel.setPersonCount(cursor.getInt(FIELD_PERSON_COUNT_COULMN_INDEX));
+			employeeModel.setFormCompleted(cursor
+					.getInt(FIELD_COMPLETED_COULMN_INDEX));
+			employeeModel.setLatitude(cursor
+					.getString(FIELD_LATITUDE_COULMN_INDEX));
+			employeeModel.setLongitude(cursor
+					.getString(FIELD_lONGITUDE_COULMN_INDEX));
+			employeeModel.setPersonCount(cursor
+					.getInt(FIELD_PERSON_COUNT_COULMN_INDEX));
 			employeeModel.setTime(cursor.getString(FIELD_TIME_COULMN_INDEX));
 			employeeModel.setRowId(cursor.getInt(FIELD_ROW_ID_COULMN_INDEX));
 			Cursor genderAgecursor = database.query(GENDER_DETAIL_TABLE,
@@ -366,16 +396,25 @@ public class EmployeeSurveyDb {
 			ArrayList<GenderAgeModel> genderAgeModelList = new ArrayList<GenderAgeModel>();
 			while (!genderAgecursor.isAfterLast()) {
 				GenderAgeModel genderAgeModel = new GenderAgeModel();
-				genderAgeModel.setrowId(cursor.getInt(FIELD_ROW_ID_COULMN_INDEX));
-				genderAgeModel.setGender(cursor.getString(FIELD_GENDER_TYPE_COULMN_INDEX));
-				genderAgeModel.setAgeGrp(cursor.getString(FIELD_AGE_GROUP_COULMN_INDEX));
-				genderAgeModelList.add(genderAgecursor.getCount(),genderAgeModel);
+				genderAgeModel.setrowId(genderAgecursor
+						.getInt(FIELD_ROW_ID_COULMN_INDEX));
+				genderAgeModel.setGender(genderAgecursor
+						.getString(FIELD_GENDER_TYPE_COULMN_INDEX));
+				genderAgeModel.setAgeGrp(genderAgecursor
+						.getString(FIELD_AGE_GROUP_COULMN_INDEX));
+				genderAgeModel.setGroupType(genderAgecursor
+						.getString(FIELD_GROUP_TYPE_COULMN_INDEX));				
+				genderAgeModelList.add(genderAgecursor.getPosition(),
+						genderAgeModel);
+				genderAgecursor.moveToNext();
 			}
 			employeeModel.setGenderAgeModel(genderAgeModelList);
-			employeeModelList.set(cursor.getPosition(), employeeModel);
+			employeeModelList.add(cursor.getPosition(), employeeModel);
 			cursor.moveToNext();
 		}
+		return employeeModelList;
 	}
+
 	/**
 	 * Private class that extends the SQLite helper class.
 	 * 
