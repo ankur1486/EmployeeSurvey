@@ -68,20 +68,21 @@ public class DashboardActivity extends FragmentActivity {
 	}
 
 	private void sendMail() {
-		Intent sendemai = new Intent(Intent.ACTION_SEND);
-		sendemai.putExtra(Intent.EXTRA_EMAIL,
-				new String[] { "ankur1486@gmail.com" });
-		// sendemai.putExtra(Intent.EXTRA_CC, new String[] { emailadd });
-		sendemai.putExtra(
-				Intent.EXTRA_SUBJECT,
-				"Employee Data for user "
-						+ EmployeePrefrence.getInstance().getStringValue(
-								EmployeePrefrence.SET_USERNAME, ""));
-		sendemai.putExtra(Intent.EXTRA_TEXT, "Testing ");
-		// need this to prompts email client only
-		sendemai.setType("message/rfc822");
-		startActivity(Intent
-				.createChooser(sendemai, "Select email application"));
+//		Intent sendemai = new Intent(Intent.ACTION_SEND);
+//		sendemai.putExtra(Intent.EXTRA_EMAIL,
+//				new String[] { "ankur1486@gmail.com" });
+//		// sendemai.putExtra(Intent.EXTRA_CC, new String[] { emailadd });
+//		sendemai.putExtra(
+//				Intent.EXTRA_SUBJECT,
+//				"Employee Data for user "
+//						+ EmployeePrefrence.getInstance().getStringValue(
+//								EmployeePrefrence.SET_USERNAME, ""));
+//		sendemai.putExtra(Intent.EXTRA_TEXT, "Testing ");
+//		// need this to prompts email client only
+//		sendemai.setType("message/rfc822");
+//		startActivity(Intent
+//				.createChooser(sendemai, "Select email application"));
+		
 	}
 
 	private void showConfirmLogoutAlert() {
