@@ -30,6 +30,12 @@
     <string name="cancel">Cancel</string>
     <string name="number_of_persons_">Number of persons :</string>
     <string name="are_you_sure_you_want_to_delete_this_row">Are you sure you want to delete this row :</string>
+    <string name="friends">Friends</string>
+    <string name="couple">Couple</string>
+    <string name="family">Family</string>
+    <string name="family_with_child">Family with child</string>
+    <string name="colleagues">Colleagues</string>
+    <string name="others">others</string>
    
 
 </resources>

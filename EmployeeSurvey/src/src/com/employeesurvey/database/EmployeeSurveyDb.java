@@ -414,10 +414,14 @@ public class EmployeeSurveyDb {
 					.getInt(FIELD_PERSON_COUNT_COULMN_INDEX));
 			employeeModel.setTime(cursor.getString(FIELD_TIME_COULMN_INDEX));
 			employeeModel.setRowId(cursor.getInt(FIELD_ROW_ID_COULMN_INDEX));
-			Cursor genderAgecursor = database.query(GENDER_DETAIL_TABLE,
-					PROJECTION_GENDER_VALUE, null, null, null, null, null);
+			Cursor genderAgecursor = getGenderRowDetail(""+cursor.getInt(FIELD_ROW_ID_COULMN_INDEX));
+					
+//					database.query(GENDER_DETAIL_TABLE,
+//					PROJECTION_GENDER_VALUE, null, null, null, null, null);
 			genderAgecursor.moveToFirst();
 			ArrayList<GenderAgeModel> genderAgeModelList = new ArrayList<GenderAgeModel>();
+			
+			
 			while (!genderAgecursor.isAfterLast()) {
 				GenderAgeModel genderAgeModel = new GenderAgeModel();
 				genderAgeModel.setrowId(genderAgecursor
