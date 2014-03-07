@@ -1,8 +1,11 @@
 package src.com.employeesurvey.adapter;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import src.com.employeesurvey.R;
 import src.com.employeesurvey.RightFragment;
@@ -67,6 +70,20 @@ public class LeftPanelListAdapter extends BaseAdapter {
 		return currentTime = df.format(now.getTime());
 	}
 
+	private String setTimeFormat(String milliSeconds) {
+		// Create a DateFormatter object for displaying date in specified
+		// format.
+		
+		long msecLong  = Long.parseLong(milliSeconds);
+		DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+
+		// Create a calendar object that will convert the date and time value in
+		// milliseconds to date.
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(msecLong);
+		return formatter.format(calendar.getTime());
+	}
+
 	@Override
 	public int getCount() {
 		return mEmployeeModel.size();
@@ -125,9 +142,9 @@ public class LeftPanelListAdapter extends BaseAdapter {
 							boolean isChecked) {
 
 						if (isChecked) {
-							EmployeeSurveyDb.getInstance().insertLeftRow(
-									position, 0, currentTime, mLatitude,
-									mLongitude, 1, 1);
+//							EmployeeSurveyDb.getInstance().insertLeftRow(
+//									position, 0, currentTime, mLatitude,
+//									mLongitude, 1, 1);
 							int leftListCount = EmployeeSurveyDb.getInstance()
 									.getLeftListCount();
 							String latitude = EmployeePrefrence.getInstance()
@@ -147,6 +164,8 @@ public class LeftPanelListAdapter extends BaseAdapter {
 							Log.w(TAG, "Total left row" + mEmployeeModel.size());
 							notifyDataSetChanged();
 							toggleIsChecked = isChecked;
+							
+							updateRightFragment(position + 1);
 
 						} else {
 							showDeleteRowConfirmAlert(position);
@@ -170,7 +189,7 @@ public class LeftPanelListAdapter extends BaseAdapter {
 				final NumberPicker numberPicker = (NumberPicker) npView
 						.findViewById(R.id.numberPicker1);
 				numberPicker.setMinValue(1);
-				numberPicker.setMaxValue(20);
+				numberPicker.setMaxValue(15);
 
 				AlertDialog alertDialog = new AlertDialog.Builder(mContext)
 						.setTitle(R.string.number_of_persons_)
@@ -191,9 +210,13 @@ public class LeftPanelListAdapter extends BaseAdapter {
 																		.getRowId(),
 														index);
 
-										EmployeeSurveyDb.getInstance().deleteGenderDetailByRowId(""+mEmployeeModel.get(
-												position)
-												.getRowId());
+										EmployeeSurveyDb
+												.getInstance()
+												.deleteGenderDetailByRowId(
+														""
+																+ mEmployeeModel
+																		.get(position)
+																		.getRowId());
 										for (int i = 0; i < index; i++) {
 											GenderAgeModel genderAgeModel = new GenderAgeModel();
 											EmployeeSurveyDb
@@ -236,7 +259,7 @@ public class LeftPanelListAdapter extends BaseAdapter {
 
 		holder.groupIdTextView.setText("" + (1 + position));
 
-		holder.timeTextView.setText(employeeModel.getTime());
+		holder.timeTextView.setText(setTimeFormat(employeeModel.getTime()));
 
 		holder.locationTextView.setText(employeeModel.getLatitude() + " , "
 				+ employeeModel.getLongitude());

@@ -14,13 +14,11 @@ import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
-import android.widget.Toast;
 
 public class GenderListAdapter extends BaseAdapter {
 
 	private Context mContext;
-	private ArrayList<GenderAgeModel> mGenderAgeModel ;
-
+	private ArrayList<GenderAgeModel> mGenderAgeModel;
 
 	public GenderListAdapter(Context context,
 			ArrayList<GenderAgeModel> genderAgeModelsList) {
@@ -56,14 +54,12 @@ public class GenderListAdapter extends BaseAdapter {
 			convertView = layoutInflater.inflate(R.layout.gender_row, null);
 		}
 
-		// GenderAgeModel genderAgeModel = mGenderAgeModelList.get(position);
-
 		Switch maleFemaleSwitch = (Switch) convertView
 				.findViewById(R.id.male_female_switch);
-		if(mGenderAgeModel.get(position).getGender().equals("ON")){
-		maleFemaleSwitch.setChecked(true);
-		}else{
-			maleFemaleSwitch.setChecked(true);
+		if (mGenderAgeModel.get(position).getGender().equals("ON")) {
+			maleFemaleSwitch.setChecked(false); // female
+		} else {
+			maleFemaleSwitch.setChecked(true); // male
 		}
 		maleFemaleSwitch
 				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -71,12 +67,12 @@ public class GenderListAdapter extends BaseAdapter {
 					@Override
 					public void onCheckedChanged(CompoundButton buttonView,
 							boolean isChecked) {
-						String state = "OFF";
+						String state = "ON"; // male selected
 						if (isChecked) {
-							state = "ON";
+							state = "OFF"; // female selected
 						}
-						Toast.makeText(mContext, "Switch 1 is " + state,
-								Toast.LENGTH_LONG).show();
+						// Toast.makeText(mContext, "Switch 1 is " + state,
+						// Toast.LENGTH_LONG).show();
 
 						mGenderAgeModel.get(position).setGender(state);
 					}
@@ -84,7 +80,43 @@ public class GenderListAdapter extends BaseAdapter {
 
 		RadioGroup ageGroupRadioGrp = (RadioGroup) convertView
 				.findViewById(R.id.gender_radio_group);
-		
+
+		RadioButton radioButton1 = (RadioButton) convertView
+				.findViewById(R.id.radioButton_age_group1);
+		RadioButton radioButton2 = (RadioButton) convertView
+				.findViewById(R.id.radioButton_age_group2);
+		RadioButton radioButton3 = (RadioButton) convertView
+				.findViewById(R.id.radioButton_age_group3);
+		RadioButton radioButton4 = (RadioButton) convertView
+				.findViewById(R.id.radioButton_age_group4);
+		RadioButton radioButton5 = (RadioButton) convertView
+				.findViewById(R.id.radioButton_age_group5);
+		RadioButton radioButton6 = (RadioButton) convertView
+				.findViewById(R.id.radioButton_age_group6);
+		RadioButton radioButton7 = (RadioButton) convertView
+				.findViewById(R.id.radioButton_age_group7);
+
+		String ageGrp = mGenderAgeModel.get(position).getAgeGrp();
+
+		if (radioButton1.getText().toString().equalsIgnoreCase(ageGrp)) {
+			radioButton1.setChecked(true);
+		} else if (radioButton2.getText().toString().equalsIgnoreCase(ageGrp)) {
+			radioButton2.setChecked(true);
+		} else if (radioButton3.getText().toString().equalsIgnoreCase(ageGrp)) {
+			radioButton3.setChecked(true);
+		} else if (radioButton4.getText().toString().equalsIgnoreCase(ageGrp)) {
+			radioButton4.setChecked(true);
+		} else if (radioButton5.getText().toString().equalsIgnoreCase(ageGrp)) {
+			radioButton5.setChecked(true);
+		} else if (radioButton6.getText().toString().equalsIgnoreCase(ageGrp)) {
+			radioButton6.setChecked(true);
+		} else if (radioButton7.getText().toString().equalsIgnoreCase(ageGrp)) {
+			radioButton7.setChecked(true);
+		}
+
+		// Toast.makeText(mContext, "value selected :" + ageGrp,
+		// Toast.LENGTH_SHORT).show();
+
 		ageGroupRadioGrp
 				.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 
@@ -93,8 +125,8 @@ public class GenderListAdapter extends BaseAdapter {
 						String value = ((RadioButton) group.findViewById(group
 								.getCheckedRadioButtonId())).getText()
 								.toString();
-						Toast.makeText(mContext, "checkedId :" + value,
-								Toast.LENGTH_SHORT).show();
+						// Toast.makeText(mContext, "checkedId :" + value,
+						// Toast.LENGTH_SHORT).show();
 
 						mGenderAgeModel.get(position).setAgeGrp(value);
 					}
