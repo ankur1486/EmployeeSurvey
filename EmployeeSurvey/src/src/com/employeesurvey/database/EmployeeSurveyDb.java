@@ -107,11 +107,15 @@ public class EmployeeSurveyDb {
 			+ " ("
 			+ FIELD_ROW_ID
 			+ " INTEGER, "
-			+ FIELD_GENDER_TYPE + " TEXT, " + FIELD_AGE_GROUP + " TEXT, " + FIELD_GROUP_TYPE + " TEXT);";
+			+ FIELD_GENDER_TYPE
+			+ " TEXT, "
+			+ FIELD_AGE_GROUP
+			+ " TEXT, "
+			+ FIELD_GROUP_TYPE + " TEXT);";
 
 	/** Projection for getting value of an error key */
 	private final static String[] PROJECTION_GENDER_VALUE = { FIELD_ROW_ID,
-			FIELD_GENDER_TYPE, FIELD_AGE_GROUP, FIELD_GROUP_TYPE};
+			FIELD_GENDER_TYPE, FIELD_AGE_GROUP, FIELD_GROUP_TYPE };
 
 	/**
 	 * Private constructor, enforces use of singleton
@@ -256,7 +260,7 @@ public class EmployeeSurveyDb {
 	}
 
 	public synchronized long insertGenderRow(int rowID, String genderType,
-			String ageGroup,String groupType) {
+			String ageGroup, String groupType) {
 
 		// Create object holding values
 		ContentValues cv = new ContentValues();
@@ -269,7 +273,7 @@ public class EmployeeSurveyDb {
 
 		return result;
 	}
-	
+
 	/**
 	 * This method will update person count against row ID
 	 * 
@@ -285,8 +289,9 @@ public class EmployeeSurveyDb {
 		ContentValues cv = new ContentValues();
 
 		cv.put(FIELD_PERSON_COUNT, personCount);
-		
-		long result = database.update(LEFT_ROW_DETAIL_TABLE,cv,whereClause,whereArgs);
+
+		long result = database.update(LEFT_ROW_DETAIL_TABLE, cv, whereClause,
+				whereArgs);
 
 		return result;
 	}
@@ -366,11 +371,30 @@ public class EmployeeSurveyDb {
 		return count;
 	}
 
-	public void deleteLeftRow(String rowId) {
+	/**
+	 * This method will delete left panel row
+	 * 
+	 * @param rowId
+	 */
+	public synchronized void deleteLeftRow(String rowId) {
 		String whereClause = FIELD_ROW_ID + "= ?";
 		String[] whereArgs = new String[] { rowId };
 		int rowsDeleted = database.delete(LEFT_ROW_DETAIL_TABLE, whereClause,
 				whereArgs);
+		Log.d(TAG, "number of left panel row deleted" + rowsDeleted);
+	}
+
+	/**
+	 * This method will delete gender row for a particular row ID
+	 * 
+	 * @param rowId
+	 */
+	public synchronized void deleteGenderDetailByRowId(String rowId) {
+		String whereClause = FIELD_ROW_ID + "= ?";
+		String[] whereArgs = new String[] { rowId };
+		int rowsDeleted = database.delete(GENDER_DETAIL_TABLE, whereClause,
+				whereArgs);
+		Log.d(TAG, "number of gender row deleted " + rowsDeleted);
 	}
 
 	public ArrayList<EmployeeModel> getDataModelForList() {
@@ -403,7 +427,7 @@ public class EmployeeSurveyDb {
 				genderAgeModel.setAgeGrp(genderAgecursor
 						.getString(FIELD_AGE_GROUP_COULMN_INDEX));
 				genderAgeModel.setGroupType(genderAgecursor
-						.getString(FIELD_GROUP_TYPE_COULMN_INDEX));				
+						.getString(FIELD_GROUP_TYPE_COULMN_INDEX));
 				genderAgeModelList.add(genderAgecursor.getPosition(),
 						genderAgeModel);
 				genderAgecursor.moveToNext();
@@ -439,4 +463,5 @@ public class EmployeeSurveyDb {
 
 		}
 	}
+
 }

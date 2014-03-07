@@ -34,16 +34,6 @@ public class DashboardActivity extends FragmentActivity {
 		EmployeeSurveyDb.getInstance().getRowIdToSet();
 		setContentView(R.layout.dashboard_activity_layout);
 
-		int leftListCount = EmployeeSurveyDb.getInstance().getLeftListCount();
-		String latitude = EmployeePrefrence.getInstance().getStringValue(
-				EmployeePrefrence.SET_LATITUDE, "");
-		String longitude = EmployeePrefrence.getInstance().getStringValue(
-				EmployeePrefrence.SET_LONGITUDE, "");
-		if (leftListCount == 1) {
-			EmployeeSurveyDb.getInstance().insertLeftRow(leftListCount, 0,
-					"" + System.currentTimeMillis(), latitude, longitude, 0, 0);
-		}
-
 	}
 
 	@Override

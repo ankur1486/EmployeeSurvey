@@ -60,6 +60,11 @@ public class GenderListAdapter extends BaseAdapter {
 
 		Switch maleFemaleSwitch = (Switch) convertView
 				.findViewById(R.id.male_female_switch);
+		if(mGenderAgeModel.get(position).getGender().equals("ON")){
+		maleFemaleSwitch.setChecked(true);
+		}else{
+			maleFemaleSwitch.setChecked(true);
+		}
 		maleFemaleSwitch
 				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
 
@@ -79,6 +84,7 @@ public class GenderListAdapter extends BaseAdapter {
 
 		RadioGroup ageGroupRadioGrp = (RadioGroup) convertView
 				.findViewById(R.id.gender_radio_group);
+		
 		ageGroupRadioGrp
 				.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
 

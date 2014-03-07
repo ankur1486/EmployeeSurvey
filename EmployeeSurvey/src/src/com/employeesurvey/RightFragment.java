@@ -5,6 +5,7 @@ import java.util.List;
 
 import src.com.employeesurvey.adapter.GenderListAdapter;
 import src.com.employeesurvey.database.EmployeeSurveyDb;
+import src.com.employeesurvey.model.EmployeeModel;
 import src.com.employeesurvey.model.GenderAgeModel;
 import android.app.Activity;
 import android.os.Bundle;
@@ -50,8 +51,12 @@ public class RightFragment extends Fragment implements OnClickListener {
 		genderListAdapter = new GenderListAdapter(getActivity(),
 				mGenderAgeArrayList);
 		mGenderList.setAdapter(genderListAdapter);
-
+		ArrayList<EmployeeModel> employeeModel = EmployeeSurveyDb.getInstance().getDataModelForList();
+		if(employeeModel.size()>0){
+		updateList(employeeModel.get(0).getGenderAgeModel(), employeeModel.get(0).getRowId());
+		}
 		mSaveButton = (Button) fragment.findViewById(R.id.save_button);
+		mSaveButton.setOnClickListener(this);
 	}
 
 	public void updateList(ArrayList<GenderAgeModel> arrayList, int rowId) {
@@ -127,6 +132,7 @@ public class RightFragment extends Fragment implements OnClickListener {
 						.getUpdatedGenderAgeGrp();
 				if (genderAgeModelsList != null
 						&& genderAgeModelsList.size() > 0) {
+					EmployeeSurveyDb.getInstance().deleteGenderDetailByRowId(""+mRowID);
 					 for (int i = 0; i < genderAgeModelsList.size(); i++) {
 					 EmployeeSurveyDb.getInstance().insertGenderRow(mRowID, genderAgeModelsList.get(i).getGender(), genderAgeModelsList.get(i).getAgeGrp(),mGroupType);
 					 }

@@ -43,6 +43,15 @@ public class LeftFragment extends Fragment implements LocationListener {
 			Bundle savedInstanceState) {
 		View fragment = inflater.inflate(R.layout.leftpanel_layout, container);
 		try {
+			int leftListCount = EmployeeSurveyDb.getInstance().getLeftListCount();
+			String latitude = EmployeePrefrence.getInstance().getStringValue(
+					EmployeePrefrence.SET_LATITUDE, "");
+			String longitude = EmployeePrefrence.getInstance().getStringValue(
+					EmployeePrefrence.SET_LONGITUDE, "");
+			if (leftListCount == 1) {
+				EmployeeSurveyDb.getInstance().insertLeftRow(leftListCount, 0,
+						"" + System.currentTimeMillis(), latitude, longitude, 0, 0);
+			}
 			init(fragment);
 			
 		} catch (Exception e) {

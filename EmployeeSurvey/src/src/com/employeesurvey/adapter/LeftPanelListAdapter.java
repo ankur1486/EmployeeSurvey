@@ -190,7 +190,10 @@ public class LeftPanelListAdapter extends BaseAdapter {
 																		.get(position)
 																		.getRowId(),
 														index);
-										
+
+										EmployeeSurveyDb.getInstance().deleteGenderDetailByRowId(""+mEmployeeModel.get(
+												position)
+												.getRowId());
 										for (int i = 0; i < index; i++) {
 											GenderAgeModel genderAgeModel = new GenderAgeModel();
 											EmployeeSurveyDb
@@ -206,7 +209,6 @@ public class LeftPanelListAdapter extends BaseAdapter {
 															genderAgeModel
 																	.getGroupType());
 										}
-										updateRightFragment(position);
 										mEmployeeModel = EmployeeSurveyDb
 												.getInstance()
 												.getDataModelForList();
@@ -214,6 +216,7 @@ public class LeftPanelListAdapter extends BaseAdapter {
 												+ mEmployeeModel.size());
 										notifyDataSetChanged();
 										holder.countButton.setText("" + index);
+										updateRightFragment(position);
 									}
 
 								})
