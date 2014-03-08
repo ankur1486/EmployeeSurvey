@@ -39,17 +39,10 @@ public class EmployeeSurveyDb {
 	 */
 	private static final String USERNAME_STORENAME_TABLE = "userdetails";
 	private static final String FIELD_USER_ROW_ID = "user_row_id";
-	private static final int  FIELD_USER_ROW_ID_COULMN_INDEX = 0;
 	private static final String FIELD_USERNAME = "username_id";
-<<<<<<< HEAD
 	private static final int FIELD_USERNAME_COULMN_INDEX = 1;
 	private static final String FIELD_STORENAME = "storename_id";
 	private static final int FIELD_STORENAME_COULMN_INDEX = 2;
-=======
-	private static final int  FIELD_USERNAME_COULMN_INDEX = 1;
-	private static final String FIELD_STORENAME = "storename_id";
-	private static final int  FIELD_STORENAME_COULMN_INDEX = 2;
->>>>>>> d5ee251e9d6acd247a2ef675d8454b7c8b2c8615
 
 	private final static String QUERY_USERNAME_STORENAME_TABLE = "CREATE TABLE IF NOT EXISTS "
 			+ USERNAME_STORENAME_TABLE
@@ -58,10 +51,6 @@ public class EmployeeSurveyDb {
 			+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
 			+ FIELD_USERNAME
 			+ " TEXT, " + FIELD_STORENAME + " TEXT);";
-	
-	/** Projection for getting user name and store name */
-	private final static String[] PROJECTION_USERNAME_STORENAME_VALUE = { FIELD_USER_ROW_ID,
-		FIELD_USERNAME, FIELD_STORENAME };
 
 	/** Projection for getting value of an error key */
 	private final static String[] PROJECTION_USERNAME_STORENAME = {
@@ -224,21 +213,6 @@ public class EmployeeSurveyDb {
 
 		return result;
 	}
-	
-	/**
-	 * This method will return the user name and store name
-	 * @return 
-	 */
-	public synchronized Cursor getUsernameStorename() {
-		
-		Cursor cursor = database.query(USERNAME_STORENAME_TABLE,
-				PROJECTION_USERNAME_STORENAME_VALUE, null, null, null, null,
-				null);
-
-		Log.d(TAG, "Returning " + cursor.getCount());
-
-		return cursor;
-	}
 
 	/**
 	 * delete username and storename table
@@ -331,11 +305,12 @@ public class EmployeeSurveyDb {
 
 		return result;
 	}
-	
+
 	/**
 	 * This method will update completed status
 	 * 
 	 * @param rowID
+	 * @param personCount
 	 * @return long number of rows affected
 	 */
 	public synchronized long updateFormCompleted(String rowID) {
@@ -429,7 +404,7 @@ public class EmployeeSurveyDb {
 	 * 
 	 * @return int person count
 	 */
-	public  synchronized int getPersonCount() {
+	public synchronized int getPersonCount() {
 		int totalPersonCount = 0;
 		Cursor cursor = database.query(LEFT_ROW_DETAIL_TABLE, null, null, null,
 				null, null, null);
@@ -458,7 +433,8 @@ public class EmployeeSurveyDb {
 		return cursor.getCount();
 	}
 
-	public synchronized int getMaleFemaleByAgeGroup(String ageGroup, String maleOrFemale) {
+	public synchronized int getMaleFemaleByAgeGroup(String ageGroup,
+			String maleOrFemale) {
 		String whereClause = FIELD_AGE_GROUP + "= ?" + " AND "
 				+ FIELD_GENDER_TYPE + "= ?";
 		String[] whereArgs = new String[] { ageGroup, maleOrFemale };
@@ -468,10 +444,11 @@ public class EmployeeSurveyDb {
 		return cursor.getCount();
 
 	}
-	
-	public synchronized int getGroupTypeDetail(String grouptype, String ageGroup, String maleOrFemale) {
-		String whereClause = FIELD_GROUP_TYPE + "= ?" + " AND " + FIELD_AGE_GROUP + "= ?" + " AND "
-				+ FIELD_GENDER_TYPE + "= ?";
+
+	public synchronized int getGroupTypeDetail(String grouptype,
+			String ageGroup, String maleOrFemale) {
+		String whereClause = FIELD_GROUP_TYPE + "= ?" + " AND "
+				+ FIELD_AGE_GROUP + "= ?" + " AND " + FIELD_GENDER_TYPE + "= ?";
 		String[] whereArgs = new String[] { grouptype, ageGroup, maleOrFemale };
 		String[] project = { FIELD_GENDER_TYPE };
 		Cursor cursor = database.query(GENDER_DETAIL_TABLE, project,
@@ -620,6 +597,20 @@ public class EmployeeSurveyDb {
 					+ newVersion);
 
 		}
+	}
+
+	public void deleteUserStoreTable() {
+		database.delete(USERNAME_STORENAME_TABLE, null, null);
+	}
+
+	public void deleteLeftListTable() {
+		database.delete(LEFT_ROW_DETAIL_TABLE, null, null);
+
+	}
+
+	public void deleteGenderListTable() {
+		database.delete(GENDER_DETAIL_TABLE, null, null);
+
 	}
 
 }

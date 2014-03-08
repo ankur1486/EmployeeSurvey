@@ -61,15 +61,11 @@ public class DashboardActivity extends FragmentActivity {
 		case R.id.action_send_mail:
 
 			sendMail();
-			Toast.makeText(getBaseContext(), "You selected Logout",
-					Toast.LENGTH_SHORT).show();
 
 			break;
 		case R.id.action_logout:
 
 			showConfirmLogoutAlert();
-			Toast.makeText(getBaseContext(), "You selected Logout",
-					Toast.LENGTH_SHORT).show();
 
 			break;
 
@@ -78,7 +74,6 @@ public class DashboardActivity extends FragmentActivity {
 	}
 
 	private void sendMail() {
-<<<<<<< HEAD
 
 		HashMap<String, String> hashMap = EmployeeSurveyDb.getInstance()
 				.getUserNameStoreName();
@@ -187,7 +182,6 @@ public class DashboardActivity extends FragmentActivity {
 		// sendemai.setType("message/rfc822");
 		// startActivity(Intent
 		// .createChooser(sendemai, "Select email application"));
-=======
 //		Intent sendemai = new Intent(Intent.ACTION_SEND);
 //		sendemai.putExtra(Intent.EXTRA_EMAIL,
 //				new String[] { "ankur1486@gmail.com" });
@@ -203,7 +197,6 @@ public class DashboardActivity extends FragmentActivity {
 //		startActivity(Intent
 //				.createChooser(sendemai, "Select email application"));
 		
->>>>>>> d5ee251e9d6acd247a2ef675d8454b7c8b2c8615
 	}
 
 	private void showConfirmLogoutAlert() {
@@ -233,8 +226,9 @@ public class DashboardActivity extends FragmentActivity {
 	 * method to delete Database for user
 	 */
 	private void deleteDatabase() {
-		// TODO Auto-generated method stub
-
+		EmployeeSurveyDb.getInstance().deleteUserStoreTable();
+		EmployeeSurveyDb.getInstance().deleteLeftListTable();
+		EmployeeSurveyDb.getInstance().deleteGenderListTable();
 	}
 
 	/**

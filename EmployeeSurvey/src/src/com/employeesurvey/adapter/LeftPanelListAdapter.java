@@ -4,8 +4,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 
 import src.com.employeesurvey.R;
 import src.com.employeesurvey.RightFragment;
@@ -29,10 +27,8 @@ import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.ToggleButton;
 
 /**

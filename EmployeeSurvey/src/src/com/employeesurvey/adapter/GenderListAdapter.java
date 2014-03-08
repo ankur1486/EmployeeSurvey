@@ -4,11 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import src.com.employeesurvey.R;
-import src.com.employeesurvey.database.EmployeeSurveyDb;
 import src.com.employeesurvey.model.GenderAgeModel;
-import src.com.employeesurvey.prefrences.EmployeePrefrence;
 import android.content.Context;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,8 +14,6 @@ import android.widget.BaseAdapter;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Switch;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
 public class GenderListAdapter extends BaseAdapter {
 
@@ -96,25 +91,25 @@ public class GenderListAdapter extends BaseAdapter {
 		} else {
 			genderListViewHolder = (GenderListViewHolder) convertView.getTag();
 		}
-		
+
 		genderListViewHolder.radioButton1
 				.setOnClickListener(new onRadioButtonClick(position));
-		
+
 		genderListViewHolder.radioButton2
 				.setOnClickListener(new onRadioButtonClick(position));
-		
+
 		genderListViewHolder.radioButton3
 				.setOnClickListener(new onRadioButtonClick(position));
-	
+
 		genderListViewHolder.radioButton4
 				.setOnClickListener(new onRadioButtonClick(position));
-	
+
 		genderListViewHolder.radioButton5
 				.setOnClickListener(new onRadioButtonClick(position));
-	
+
 		genderListViewHolder.radioButton6
 				.setOnClickListener(new onRadioButtonClick(position));
-		
+
 		genderListViewHolder.radioButton7
 				.setOnClickListener(new onRadioButtonClick(position));
 
@@ -134,9 +129,6 @@ public class GenderListAdapter extends BaseAdapter {
 						if (!genderListViewHolder.mGenderSwitch.isChecked()) {
 							state = "FEMALE"; // female selected
 						}
-						// Toast.makeText(mContext, "Switch 1 is " + state,
-						// Toast.LENGTH_LONG).show();
-
 						mGenderAgeModel.get(position).setGender(state);
 					}
 				});
@@ -168,65 +160,13 @@ public class GenderListAdapter extends BaseAdapter {
 
 		}
 
-//		genderListViewHolder.radioButton7
-//		.setOnClickListener(new OnClickListener() {
-//
-//			@Override
-//			public void onClick(View v) {
-//
-//				String value = ((RadioButton) v
-//						.findViewById(genderListViewHolder.mAgeGroupRadioGroup
-//								.getCheckedRadioButtonId())).getText()
-//						.toString();
-//
-//				mGenderAgeModel.get(position).setAgeGrp(value);
-//				Toast.makeText(mContext, "checkedId :" + value,
-//						Toast.LENGTH_SHORT).show();
-//
-//			}
-//		});
-		// Toast.makeText(mContext, "value selected :" + ageGrp,
-		// Toast.LENGTH_SHORT).show();
-
-		// genderListViewHolder.mAgeGroupRadioGroup
-		// .setOnClickListener(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		//
-		// Toast.makeText(mContext, "checkedId :",
-		// Toast.LENGTH_SHORT).show();
-		//
-		// String value = ((RadioButton) v
-		// .findViewById(genderListViewHolder.mAgeGroupRadioGroup
-		// .getCheckedRadioButtonId())).getText()
-		// .toString();
-		//
-		// mGenderAgeModel.get(position).setAgeGrp(value);
-		// }
-		// });
-		// genderListViewHolder.mAgeGroupRadioGroup
-		// .setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener()
-		// {
-		//
-		// @Override
-		// public void onCheckedChanged(RadioGroup group, int checkedId) {
-		// String value = ((RadioButton) group.findViewById(group
-		// .getCheckedRadioButtonId())).getText()
-		// .toString();
-		// // Toast.makeText(mContext, "checkedId :" + value,
-		// // Toast.LENGTH_SHORT).show();
-		//
-		// mGenderAgeModel.get(position).setAgeGrp(value);
-		// }
-		// });
-
 		return convertView;
 	}
 
 	class onRadioButtonClick implements OnClickListener {
 		private int mPosition;
-		onRadioButtonClick( int position) {
+
+		onRadioButtonClick(int position) {
 			mPosition = position;
 		}
 
@@ -234,51 +174,51 @@ public class GenderListAdapter extends BaseAdapter {
 			RadioButton mRadioButton = null;
 			switch (v.getId()) {
 			case R.id.radioButton_age_group1:
-				mRadioButton = (RadioButton)v.findViewById(R.id.radioButton_age_group1);
-				mGenderAgeModel.get(mPosition).setAgeGrp(mRadioButton.getText().toString());
-				Toast.makeText(mContext, "mPosition :"+mPosition+" mRadioButton "+mRadioButton.getText().toString(), Toast.LENGTH_SHORT).show();
+				mRadioButton = (RadioButton) v
+						.findViewById(R.id.radioButton_age_group1);
+				mGenderAgeModel.get(mPosition).setAgeGrp(
+						mRadioButton.getText().toString());
 				break;
 			case R.id.radioButton_age_group2:
-				mRadioButton = (RadioButton)v.findViewById(R.id.radioButton_age_group2);
-				mGenderAgeModel.get(mPosition).setAgeGrp(mRadioButton.getText().toString());
-				Toast.makeText(mContext, "mPosition :"+mPosition+" mRadioButton "+mRadioButton.getText().toString(), Toast.LENGTH_SHORT).show();
+				mRadioButton = (RadioButton) v
+						.findViewById(R.id.radioButton_age_group2);
+				mGenderAgeModel.get(mPosition).setAgeGrp(
+						mRadioButton.getText().toString());
 				break;
 			case R.id.radioButton_age_group3:
-				mRadioButton = (RadioButton)v.findViewById(R.id.radioButton_age_group3);
-				mGenderAgeModel.get(mPosition).setAgeGrp(mRadioButton.getText().toString());
-				Toast.makeText(mContext, "mPosition :"+mPosition+" mRadioButton "+mRadioButton.getText().toString(), Toast.LENGTH_SHORT).show();
+				mRadioButton = (RadioButton) v
+						.findViewById(R.id.radioButton_age_group3);
+				mGenderAgeModel.get(mPosition).setAgeGrp(
+						mRadioButton.getText().toString());
 				break;
 			case R.id.radioButton_age_group4:
-				mRadioButton = (RadioButton)v.findViewById(R.id.radioButton_age_group4);
-				mGenderAgeModel.get(mPosition).setAgeGrp(mRadioButton.getText().toString());
-				Toast.makeText(mContext, "mPosition :"+mPosition+" mRadioButton "+mRadioButton.getText().toString(), Toast.LENGTH_SHORT).show();
+				mRadioButton = (RadioButton) v
+						.findViewById(R.id.radioButton_age_group4);
+				mGenderAgeModel.get(mPosition).setAgeGrp(
+						mRadioButton.getText().toString());
 				break;
 			case R.id.radioButton_age_group5:
-				mRadioButton = (RadioButton)v.findViewById(R.id.radioButton_age_group5);
-				mGenderAgeModel.get(mPosition).setAgeGrp(mRadioButton.getText().toString());
-				Toast.makeText(mContext, "mPosition :"+mPosition+" mRadioButton "+mRadioButton.getText().toString(), Toast.LENGTH_SHORT).show();
+				mRadioButton = (RadioButton) v
+						.findViewById(R.id.radioButton_age_group5);
+				mGenderAgeModel.get(mPosition).setAgeGrp(
+						mRadioButton.getText().toString());
 				break;
 			case R.id.radioButton_age_group6:
-				mRadioButton = (RadioButton)v.findViewById(R.id.radioButton_age_group6);
-				mGenderAgeModel.get(mPosition).setAgeGrp(mRadioButton.getText().toString());
-				Toast.makeText(mContext, "mPosition :"+mPosition+" mRadioButton "+mRadioButton.getText().toString(), Toast.LENGTH_SHORT).show();
+				mRadioButton = (RadioButton) v
+						.findViewById(R.id.radioButton_age_group6);
+				mGenderAgeModel.get(mPosition).setAgeGrp(
+						mRadioButton.getText().toString());
 				break;
 			case R.id.radioButton_age_group7:
-				mRadioButton = (RadioButton)v.findViewById(R.id.radioButton_age_group7);
-				mGenderAgeModel.get(mPosition).setAgeGrp(mRadioButton.getText().toString());
-				Toast.makeText(mContext, "mPosition :"+mPosition+" mRadioButton "+mRadioButton.getText().toString(), Toast.LENGTH_SHORT).show();
+				mRadioButton = (RadioButton) v
+						.findViewById(R.id.radioButton_age_group7);
+				mGenderAgeModel.get(mPosition).setAgeGrp(
+						mRadioButton.getText().toString());
 				break;
 
 			default:
 				break;
 			}
-
-//			String value = ((RadioButton) v
-//					.findViewById(R.id.rmAgeGroupRadioGroup
-//							.getCheckedRadioButtonId())).getText().toString();
-//			Toast.makeText(mContext, "checkedId :", Toast.LENGTH_SHORT).show();
-//
-//			mGenderAgeModel.get(position).setAgeGrp(value);
 
 		}
 	}
