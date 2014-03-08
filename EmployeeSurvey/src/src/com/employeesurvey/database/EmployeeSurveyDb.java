@@ -1,6 +1,7 @@
 package src.com.employeesurvey.database;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import src.com.employeesurvey.model.EmployeeModel;
 import src.com.employeesurvey.model.GenderAgeModel;
@@ -39,7 +40,9 @@ public class EmployeeSurveyDb {
 	private static final String USERNAME_STORENAME_TABLE = "userdetails";
 	private static final String FIELD_USER_ROW_ID = "user_row_id";
 	private static final String FIELD_USERNAME = "username_id";
+	private static final int FIELD_USERNAME_COULMN_INDEX = 1;
 	private static final String FIELD_STORENAME = "storename_id";
+	private static final int FIELD_STORENAME_COULMN_INDEX = 2;
 
 	private final static String QUERY_USERNAME_STORENAME_TABLE = "CREATE TABLE IF NOT EXISTS "
 			+ USERNAME_STORENAME_TABLE
@@ -49,6 +52,9 @@ public class EmployeeSurveyDb {
 			+ FIELD_USERNAME
 			+ " TEXT, " + FIELD_STORENAME + " TEXT);";
 
+	/** Projection for getting value of an error key */
+	private final static String[] PROJECTION_USERNAME_STORENAME = {
+			FIELD_USERNAME, FIELD_STORENAME };
 	/**
 	 * left row table
 	 */
@@ -89,6 +95,9 @@ public class EmployeeSurveyDb {
 	private final static String[] PROJECTION_LEFT_ROW_VALUE = { FIELD_ROW_ID,
 			FIELD_PERSON_COUNT, FIELD_TIME, FIELD_LATITUDE, FIELD_lONGITUDE,
 			FIELD_COMPLETED, FIELD_DELETE };
+
+	/** Projection for getting value of an error key */
+	private final static String[] PROJECTION_PERSON_COUNT = { FIELD_PERSON_COUNT };
 
 	/**
 	 * gender age grp and grp type table
@@ -254,6 +263,7 @@ public class EmployeeSurveyDb {
 
 		long result = database.insert(LEFT_ROW_DETAIL_TABLE, null, cv);
 
+		System.out.println("Row Id " + rowID);
 		System.out.println("inserted left row to table " + result);
 
 		return result;
@@ -295,13 +305,34 @@ public class EmployeeSurveyDb {
 
 		return result;
 	}
+	
+	/**
+	 * This method will update completed status
+	 * 
+	 * @param rowID
+	 * @return long number of rows affected
+	 */
+	public synchronized long updateFormCompleted(String rowID) {
+
+		String whereClause = FIELD_ROW_ID + "=?";
+		String[] whereArgs = new String[] { rowID };
+		// Create object holding values
+		ContentValues cv = new ContentValues();
+
+		cv.put(FIELD_COMPLETED, 1);
+
+		long result = database.update(LEFT_ROW_DETAIL_TABLE, cv, whereClause,
+				whereArgs);
+
+		return result;
+	}
 
 	/**
 	 * query to get a particular row gender details
 	 * 
 	 * @return A cursor with gender details
 	 */
-	public Cursor getGenderRowDetail(String rowId) {
+	public synchronized Cursor getGenderRowDetail(String rowId) {
 		String whereClause = FIELD_ROW_ID + "=?";
 		String[] whereArgs = new String[] { rowId };
 		Cursor cursor = database.query(GENDER_DETAIL_TABLE,
@@ -319,7 +350,7 @@ public class EmployeeSurveyDb {
 	 * 
 	 * @return A cursor with time stamp for particular error key
 	 */
-	public Cursor getLeftRowEntries(int deleteCheck) {
+	public synchronized Cursor getLeftRowEntries(int deleteCheck) {
 		String whereClause = FIELD_DELETE + "= ?";
 		String[] whereArgs = new String[] { "" + deleteCheck };
 		Cursor cursor = database.query(LEFT_ROW_DETAIL_TABLE,
@@ -335,7 +366,7 @@ public class EmployeeSurveyDb {
 	 * 
 	 * @return int Row ID
 	 */
-	public int getRowIdToSet() {
+	public synchronized int getRowIdToSet() {
 
 		Cursor cursor = database.query(LEFT_ROW_DETAIL_TABLE,
 				PROJECTION_LEFT_ROW_VALUE, null, null, null, null, null);
@@ -351,11 +382,107 @@ public class EmployeeSurveyDb {
 	}
 
 	/**
+	 * This method will return the store and user name
+	 * 
+	 * @return HashMap stor and user name
+	 */
+	public synchronized HashMap<String, String> getUserNameStoreName() {
+		Cursor cursor = database.query(USERNAME_STORENAME_TABLE, null, null,
+				null, null, null, null);
+		cursor.moveToFirst();
+		String userName = cursor.getString(FIELD_USERNAME_COULMN_INDEX);
+		String storeName = cursor.getString(FIELD_STORENAME_COULMN_INDEX);
+		HashMap<String, String> userNameStoreName = new HashMap<String, String>();
+		userNameStoreName.put(Constants.USER_NAME_KEY, userName);
+		userNameStoreName.put(Constants.STORE_NAME_KEY, storeName);
+		return userNameStoreName;
+	}
+
+	/**
+	 * This method will return total number of person count
+	 * 
+	 * @return int person count
+	 */
+	public  synchronized int getPersonCount() {
+		int totalPersonCount = 0;
+		Cursor cursor = database.query(LEFT_ROW_DETAIL_TABLE, null, null, null,
+				null, null, null);
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			totalPersonCount = totalPersonCount
+					+ cursor.getInt(FIELD_PERSON_COUNT_COULMN_INDEX);
+			cursor.moveToNext();
+		}
+		return totalPersonCount;
+	}
+
+	/**
+	 * This method will return the number of males and females depending upon
+	 * the parameter passed.
+	 * 
+	 * @param maleOrFemale
+	 * @return int number of males and females.
+	 */
+	public synchronized int getNumberOfMalesFemales(String maleOrFemale) {
+		String whereClause = FIELD_GENDER_TYPE + "= ?";
+		String[] whereArgs = new String[] { maleOrFemale };
+		String[] project = { FIELD_GENDER_TYPE };
+		Cursor cursor = database.query(GENDER_DETAIL_TABLE, project,
+				whereClause, whereArgs, null, null, null);
+		return cursor.getCount();
+	}
+
+	public synchronized int getMaleFemaleByAgeGroup(String ageGroup, String maleOrFemale) {
+		String whereClause = FIELD_AGE_GROUP + "= ?" + " AND "
+				+ FIELD_GENDER_TYPE + "= ?";
+		String[] whereArgs = new String[] { ageGroup, maleOrFemale };
+		String[] project = { FIELD_GENDER_TYPE };
+		Cursor cursor = database.query(GENDER_DETAIL_TABLE, project,
+				whereClause, whereArgs, null, null, null);
+		return cursor.getCount();
+
+	}
+	
+	public synchronized int getGroupTypeDetail(String grouptype, String ageGroup, String maleOrFemale) {
+		String whereClause = FIELD_GROUP_TYPE + "= ?" + " AND " + FIELD_AGE_GROUP + "= ?" + " AND "
+				+ FIELD_GENDER_TYPE + "= ?";
+		String[] whereArgs = new String[] { grouptype, ageGroup, maleOrFemale };
+		String[] project = { FIELD_GENDER_TYPE };
+		Cursor cursor = database.query(GENDER_DETAIL_TABLE, project,
+				whereClause, whereArgs, null, null, null);
+		return cursor.getCount();
+
+	}
+
+	public synchronized ArrayList<EmployeeModel> getTimeLocationPersonCount() {
+
+		String[] project = { FIELD_TIME, FIELD_LATITUDE, FIELD_lONGITUDE,
+				FIELD_PERSON_COUNT };
+		Cursor cursor = database.query(LEFT_ROW_DETAIL_TABLE, project, null,
+				null, null, null, null);
+
+		ArrayList<EmployeeModel> employeeModelsList = new ArrayList<EmployeeModel>();
+		cursor.moveToFirst();
+		while (!cursor.isAfterLast()) {
+			EmployeeModel employeeModel = new EmployeeModel();
+			employeeModel.setTime(cursor.getString(0));
+			employeeModel.setLatitude(cursor.getString(1));
+			employeeModel.setLongitude(cursor.getString(2));
+			employeeModel.setPersonCount(cursor.getInt(3));
+			employeeModelsList.add(employeeModel);
+			cursor.moveToNext();
+		}
+
+		return employeeModelsList;
+
+	}
+
+	/**
 	 * This method will give total number of rows in Db
 	 * 
 	 * @return int row count
 	 */
-	public int getLeftListCount() {
+	public synchronized int getLeftListCount() {
 
 		int count = 0;
 		Cursor cursor = database.query(LEFT_ROW_DETAIL_TABLE,
@@ -366,7 +493,8 @@ public class EmployeeSurveyDb {
 			++count;
 
 		} else {
-			count = cursor.getCount() + 1;
+			cursor.moveToLast();
+			count = cursor.getInt(FIELD_ROW_ID_COULMN_INDEX) + 1;
 		}
 		return count;
 	}
@@ -397,7 +525,7 @@ public class EmployeeSurveyDb {
 		Log.d(TAG, "number of gender row deleted " + rowsDeleted);
 	}
 
-	public ArrayList<EmployeeModel> getDataModelForList() {
+	public synchronized ArrayList<EmployeeModel> getDataModelForList() {
 		ArrayList<EmployeeModel> employeeModelList = new ArrayList<EmployeeModel>();
 		Cursor cursor = database.query(LEFT_ROW_DETAIL_TABLE,
 				PROJECTION_LEFT_ROW_VALUE, null, null, null, null, null);
@@ -414,14 +542,14 @@ public class EmployeeSurveyDb {
 					.getInt(FIELD_PERSON_COUNT_COULMN_INDEX));
 			employeeModel.setTime(cursor.getString(FIELD_TIME_COULMN_INDEX));
 			employeeModel.setRowId(cursor.getInt(FIELD_ROW_ID_COULMN_INDEX));
-			Cursor genderAgecursor = getGenderRowDetail(""+cursor.getInt(FIELD_ROW_ID_COULMN_INDEX));
-					
-//					database.query(GENDER_DETAIL_TABLE,
-//					PROJECTION_GENDER_VALUE, null, null, null, null, null);
+			Cursor genderAgecursor = getGenderRowDetail(""
+					+ cursor.getInt(FIELD_ROW_ID_COULMN_INDEX));
+
+			// database.query(GENDER_DETAIL_TABLE,
+			// PROJECTION_GENDER_VALUE, null, null, null, null, null);
 			genderAgecursor.moveToFirst();
 			ArrayList<GenderAgeModel> genderAgeModelList = new ArrayList<GenderAgeModel>();
-			
-			
+
 			while (!genderAgecursor.isAfterLast()) {
 				GenderAgeModel genderAgeModel = new GenderAgeModel();
 				genderAgeModel.setrowId(genderAgecursor

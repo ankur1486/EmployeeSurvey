@@ -21,7 +21,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 public class RightFragment extends Fragment implements OnClickListener {
 
@@ -183,6 +182,18 @@ public class RightFragment extends Fragment implements OnClickListener {
 								mGroupType);
 					}
 				}
+				int ageGroupSize = 0;
+				for (int i = 0; i < genderAgeModelsList.size(); i++) {
+					if(genderAgeModelsList.get(i).getAgeGrp().equals("")){
+						break;
+					}else{
+						ageGroupSize++;
+					}
+				}
+				if(ageGroupSize == genderAgeModelsList.size()){
+					EmployeeSurveyDb.getInstance().updateFormCompleted(""+mRowID);
+					updateLeftFragment();
+				}
 			}
 
 			break;
@@ -190,5 +201,10 @@ public class RightFragment extends Fragment implements OnClickListener {
 		default:
 			break;
 		}
+	}
+	private void updateLeftFragment() {
+		LeftFragment rightFragment = (LeftFragment) getFragmentManager().findFragmentById(R.id.left_fragment);		
+			rightFragment.updateLeftList();
+		
 	}
 }

@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.NumberPicker;
 import android.widget.TextView;
@@ -49,7 +50,9 @@ public class LeftPanelListAdapter extends BaseAdapter {
 	private String currentTime;
 	private String mLatitude;
 	private String mLongitude;
-	EmployeeLeftListMemberViewHolder holder = new EmployeeLeftListMemberViewHolder();
+	private int mSize = 0;
+
+	private int mSelectedPosition = 0;
 	private ArrayList<EmployeeModel> mEmployeeModel;;
 
 	public LeftPanelListAdapter(Context context,
@@ -57,6 +60,7 @@ public class LeftPanelListAdapter extends BaseAdapter {
 		mContext = context;
 		mFragment = fragment;
 		mEmployeeModel = employeeModels;
+		mSize = (mEmployeeModel.size() - 1);
 		mLatitude = EmployeePrefrence.getInstance().getStringValue(
 				EmployeePrefrence.SET_LATITUDE, Constants.DEFAULT_LATITUDE);
 		mLongitude = EmployeePrefrence.getInstance().getStringValue(
@@ -73,8 +77,8 @@ public class LeftPanelListAdapter extends BaseAdapter {
 	private String setTimeFormat(String milliSeconds) {
 		// Create a DateFormatter object for displaying date in specified
 		// format.
-		
-		long msecLong  = Long.parseLong(milliSeconds);
+
+		long msecLong = Long.parseLong(milliSeconds);
 		DateFormat formatter = new SimpleDateFormat("HH:mm:ss");
 
 		// Create a calendar object that will convert the date and time value in
@@ -104,7 +108,7 @@ public class LeftPanelListAdapter extends BaseAdapter {
 	@Override
 	public View getView(final int position, View convertView, ViewGroup parent) {
 		View view = convertView;
-
+		final EmployeeLeftListMemberViewHolder holder;
 		if (view == null) {
 			LayoutInflater layoutInflater = LayoutInflater.from(mContext);
 			view = layoutInflater.inflate(R.layout.left_fragment_row, null);
@@ -124,6 +128,8 @@ public class LeftPanelListAdapter extends BaseAdapter {
 					.findViewById(R.id.textView_time);
 			holder.locationTextView = (TextView) view
 					.findViewById(R.id.textView_location);
+			holder.completedCheckBox = (CheckBox) view
+					.findViewById(R.id.checkBox_form_completed);
 
 			view.setTag(holder);
 
@@ -134,48 +140,20 @@ public class LeftPanelListAdapter extends BaseAdapter {
 
 		EmployeeModel employeeModel = mEmployeeModel.get(position);
 
-		holder.addDeleteButton
-				.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-
-					@Override
-					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
-
-						if (isChecked) {
-//							EmployeeSurveyDb.getInstance().insertLeftRow(
-//									position, 0, currentTime, mLatitude,
-//									mLongitude, 1, 1);
-							int leftListCount = EmployeeSurveyDb.getInstance()
-									.getLeftListCount();
-							String latitude = EmployeePrefrence.getInstance()
-									.getStringValue(
-											EmployeePrefrence.SET_LATITUDE, "");
-							String longitude = EmployeePrefrence
-									.getInstance()
-									.getStringValue(
-											EmployeePrefrence.SET_LONGITUDE, "");
-
-							EmployeeSurveyDb.getInstance().insertLeftRow(
-									leftListCount, 0,
-									"" + System.currentTimeMillis(), latitude,
-									longitude, 0, 0);
-							mEmployeeModel = EmployeeSurveyDb.getInstance()
-									.getDataModelForList();
-							Log.w(TAG, "Total left row" + mEmployeeModel.size());
-							notifyDataSetChanged();
-							toggleIsChecked = isChecked;
-							
-							updateRightFragment(position + 1);
-
-						} else {
-							showDeleteRowConfirmAlert(position);
-						}
-					}
-				});
-
+		if (mSize == position) {
+			holder.addDeleteButton.setChecked(true);
+		} else {
+			holder.addDeleteButton.setChecked(false);
+		}
+		if (employeeModel.isFormCompleted() == 1) {
+			holder.completedCheckBox.setChecked(true);
+		} else {
+			holder.completedCheckBox.setChecked(false);
+		}
+		holder.completedCheckBox.setEnabled(false);
 		holder.countButton.setText("" + employeeModel.getPersonCount());
-		// holder.addDeleteButton.setOnClickListener(new onClickAddDeleteButton(
-		// position, toggleIsChecked, mContext));
+		holder.addDeleteButton.setOnClickListener(new onClickAddDeleteButton(
+				position, toggleIsChecked, mContext));
 
 		holder.countButton.setOnClickListener(new OnClickListener() {
 
@@ -235,11 +213,12 @@ public class LeftPanelListAdapter extends BaseAdapter {
 										mEmployeeModel = EmployeeSurveyDb
 												.getInstance()
 												.getDataModelForList();
+										mSize = (mEmployeeModel.size() - 1);
 										Log.w(TAG, "Total left row"
 												+ mEmployeeModel.size());
 										notifyDataSetChanged();
 										holder.countButton.setText("" + index);
-										updateRightFragment(position);
+										updateRightFragment(0, position);
 									}
 
 								})
@@ -266,7 +245,28 @@ public class LeftPanelListAdapter extends BaseAdapter {
 		holder.locationTextView
 				.setOnClickListener(new OnLocationItemClickListener(position,
 						mContext));
-		view.setOnClickListener(new OnItemClickListener(position, mContext));
+		view.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				mSelectedPosition = position;
+				selectItem(v, position);
+				updateRightFragment(0, position);
+
+				notifyDataSetChanged();
+			}
+
+			private void selectItem(View v, int position) {
+				v.setBackgroundResource(android.R.color.holo_blue_light);
+			}
+		});
+
+		if (mSelectedPosition == position) {
+			view.setBackgroundResource(android.R.color.holo_blue_light);
+		} else {
+			view.setBackgroundResource(android.R.color.white);
+		}
+
 		return view;
 	}
 
@@ -281,12 +281,14 @@ public class LeftPanelListAdapter extends BaseAdapter {
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
+								mSelectedPosition = position;
 								EmployeeSurveyDb.getInstance().deleteLeftRow(
 										""
 												+ mEmployeeModel.get(position)
 														.getRowId());
 								mEmployeeModel = EmployeeSurveyDb.getInstance()
 										.getDataModelForList();
+								mSize = (mEmployeeModel.size() - 1);
 								Log.w(TAG,
 										"Total left row"
 												+ mEmployeeModel.size());
@@ -298,6 +300,7 @@ public class LeftPanelListAdapter extends BaseAdapter {
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog,
 									int which) {
+								notifyDataSetChanged();
 								dialog.cancel();
 
 							}
@@ -310,64 +313,79 @@ public class LeftPanelListAdapter extends BaseAdapter {
 		TextView groupIdTextView;
 		Button countButton;
 		ToggleButton addDeleteButton;
+		CheckBox completedCheckBox;
 	}
 
-	private void updateRightFragment(int position) {
+	private void updateRightFragment(int position, int rowId) {
 		RightFragment rightFragment = (RightFragment) mFragment
 				.getFragmentManager().findFragmentById(R.id.right_fragmment);
-		rightFragment.updateList(mEmployeeModel.get(position)
-				.getGenderAgeModel(), mEmployeeModel.get(position).getRowId());
-	}
-
-}
-
-/**
- * 
- * on click Add/Delete
- * 
- */
-class onClickAddDeleteButton implements OnClickListener {
-	private int mPosition;
-	private Context mViewClickContext;
-	private boolean mToggleIsChecked;
-
-	onClickAddDeleteButton(int position, boolean toggleIsChecked,
-			Context context) {
-		mPosition = position;
-		mViewClickContext = context;
-		mToggleIsChecked = toggleIsChecked;
-	}
-
-	public void onClick(View v) {
-
-		if (mToggleIsChecked) {
-			Toast.makeText(mViewClickContext, "Toggle is add  ",
-					Toast.LENGTH_SHORT).show();
-
+		if (position != -1) {
+			rightFragment.updateList(mEmployeeModel.get(rowId)
+					.getGenderAgeModel(), mEmployeeModel.get(rowId).getRowId());
 		} else {
-			Toast.makeText(mViewClickContext, "Toggle is delete ",
-					Toast.LENGTH_SHORT).show();
+			ArrayList<GenderAgeModel> genderAgeModelList = new ArrayList<GenderAgeModel>();
+
+			rightFragment.updateList(genderAgeModelList, rowId);
+		}
+	}
+
+	/**
+	 * 
+	 * on click Add/Delete
+	 * 
+	 */
+	class onClickAddDeleteButton implements OnClickListener {
+		private int mPosition;
+		private Context mViewClickContext;
+		private boolean mToggleIsChecked;
+
+		onClickAddDeleteButton(int position, boolean toggleIsChecked,
+				Context context) {
+			mPosition = position;
+			mViewClickContext = context;
+			mToggleIsChecked = toggleIsChecked;
 		}
 
+		public void onClick(View v) {
+
+			ToggleButton addDeleteButton = (ToggleButton) v
+					.findViewById(R.id.button_add_delete);
+
+			if (!addDeleteButton.isChecked()) {
+				mSelectedPosition = mPosition + 1;
+				// Toast.makeText(mViewClickContext, "Toggle is add  ",
+				// Toast.LENGTH_SHORT).show();
+				int leftListCount = EmployeeSurveyDb.getInstance()
+						.getLeftListCount();
+				String latitude = EmployeePrefrence.getInstance()
+						.getStringValue(EmployeePrefrence.SET_LATITUDE, "");
+				String longitude = EmployeePrefrence.getInstance()
+						.getStringValue(EmployeePrefrence.SET_LONGITUDE, "");
+
+				EmployeeSurveyDb.getInstance().insertLeftRow(leftListCount, 0,
+						"" + System.currentTimeMillis(), latitude, longitude,
+						0, 0);
+				mEmployeeModel = EmployeeSurveyDb.getInstance()
+						.getDataModelForList();
+				Log.w(LeftPanelListAdapter.TAG, "Total left row"
+						+ mEmployeeModel.size());
+				mSize = (mEmployeeModel.size() - 1);
+
+				notifyDataSetChanged();
+				updateRightFragment(-1, mPosition);
+
+			} else {
+				// Toast.makeText(mViewClickContext, "Toggle is delete ",
+				// Toast.LENGTH_SHORT).show();
+				showDeleteRowConfirmAlert(mPosition);
+			}
+
+		}
 	}
-}
-
-class OnItemClickListener implements OnClickListener {
-	private int mPosition;
-	private Context mViewClickContext;
-
-	OnItemClickListener(int position, Context context) {
-		mPosition = position;
-		mViewClickContext = context;
+	public void updateData(){
+		mEmployeeModel = EmployeeSurveyDb.getInstance().getDataModelForList();
+		notifyDataSetChanged();
 	}
-
-	public void onClick(View v) {
-
-		Toast.makeText(mViewClickContext, "View item clicked ",
-				Toast.LENGTH_SHORT).show();
-
-	}
-
 }
 
 class OnLocationItemClickListener implements OnClickListener {

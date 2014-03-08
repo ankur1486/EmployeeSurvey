@@ -3,7 +3,7 @@
 
     <string name="app_name">Employee Survey</string>
     <string name="action_logout">Logout</string>
-   <string name="action_send_mail">Send Mail </string>
+    <string name="action_send_mail">Send Mail </string>
     <string name="hello_world">Hello world!</string>
     <string name="welcome_screen_">"Welcome Screen "</string>
     <string name="login_screen_">"Login Form "</string>
@@ -13,14 +13,14 @@
     <string name="button_cancel">Cancel</string>
     <string name="female">Female</string>
     <string name="male">Male</string>
-    <string name="_60_">60 ></string>
-    
+
     <!-- #8211; for (-) -->
+    <string name="_60_">60 ></string>
     <string name="_50_60">50 - 60</string>
     <string name="_40_50">40 - 50</string>
     <string name="_30_40">30 - 40</string>
     <string name="_20_30">20 - 30</string>
-     <string name="_10_20">10-20</string>
+    <string name="_10_20">10 - 20</string>
     <string name="_0_10">0 - 10</string>
     <string name="group_type">Group Type</string>
     <string name="gender_agegrp">Gender and Age group</string>
@@ -36,6 +36,23 @@
     <string name="family_with_child">Family with child</string>
     <string name="colleagues">Colleagues</string>
     <string name="others">others</string>
-   
+
+    <string-array name="group_type">
+        <item name="friends">Friends</item>
+        <item name="couple">Couple</item>
+        <item name="family">Family</item>
+        <item name="family_with_child">Family with child</item>
+        <item name="colleagues">Colleagues</item>
+        <item name="others">others</item>
+    </string-array>
+    <string-array name="malefemaleage_array">
+        <item name="_0_10">0 - 10</item>
+        <item name="_10_20">10 - 20</item>
+        <item name="_20_30">20 - 30</item>
+        <item name="_30_40">30 - 40</item>
+        <item name="_40_50">40 - 50</item>
+        <item name="_50_60">50 - 60</item>
+        <item name="_60_">60 ></item>
+    </string-array>
 
 </resources>

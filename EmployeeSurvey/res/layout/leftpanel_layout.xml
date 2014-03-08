@@ -135,6 +135,11 @@
         android:id="@+id/left_panel_listView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="#999999"
+        android:choiceMode="singleChoice"
+        android:scrollbars="none"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="5dp"
         android:listSelector="@drawable/list_drawable_state" >
     </ListView>
 

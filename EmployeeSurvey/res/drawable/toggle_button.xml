@@ -8,8 +8,8 @@
     
     
     <!-- When selected, use grey -->
-    <item android:drawable="@drawable/minus_icon" android:state_checked="true"/>
+    <item android:drawable="@drawable/minus_icon" android:state_checked="false"/>
     <!-- When not selected, use white -->
-    <item android:drawable="@drawable/add_icon" android:state_checked="false"/>
+    <item android:drawable="@drawable/add_icon" android:state_checked="true"/>
 
 </selector>

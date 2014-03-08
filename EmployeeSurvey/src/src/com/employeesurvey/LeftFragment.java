@@ -25,9 +25,9 @@ import com.google.android.gms.location.LocationListener;
  */
 public class LeftFragment extends Fragment implements LocationListener {
 
-	private ListView mLeftPanelListView;
 	private LocationUtils locationUtils;
 	private Location mLocation;
+	private LeftPanelListAdapter genderListAdapter;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -66,9 +66,9 @@ public class LeftFragment extends Fragment implements LocationListener {
 		ArrayList<EmployeeModel> employeeModels = EmployeeSurveyDb.getInstance().getDataModelForList();
 		
 //		int listCount = EmployeeSurveyDb.getInstance().getLeftListCount();
-		mLeftPanelListView = (ListView) fragment
+		ListView mLeftPanelListView = (ListView) fragment
 				.findViewById(R.id.left_panel_listView);
-		LeftPanelListAdapter genderListAdapter = new LeftPanelListAdapter(
+		 genderListAdapter = new LeftPanelListAdapter(
 				getActivity(), employeeModels , LeftFragment.this);
 		mLeftPanelListView.setAdapter(genderListAdapter);
 	}
@@ -87,6 +87,10 @@ public class LeftFragment extends Fragment implements LocationListener {
 					EmployeePrefrence.SET_LONGITUDE,
 					"" + location.getLongitude());
 		}
+	}
+
+	public void updateLeftList() {
+		genderListAdapter.updateData();
 	}
 
 }

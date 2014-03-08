@@ -1,6 +1,7 @@
 package src.com.employeesurvey;
 
 import src.com.employeesurvey.prefrences.EmployeePrefrence;
+import src.com.employeesurvey.util.LocationUtils;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -47,8 +48,9 @@ public class SplashActivity extends Activity implements LocationListener {
 
 	@Override
 	protected void onResume() {
-		// TODO Auto-generated method stub
 		super.onResume();
+		LocationUtils locationUtils = new LocationUtils(this, this);
+		locationUtils.connectLocationService();
 	}
 
 	private void launchDashboardActivity() {
