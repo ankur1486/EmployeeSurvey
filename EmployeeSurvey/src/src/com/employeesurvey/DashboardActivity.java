@@ -4,15 +4,18 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import src.com.employeesurvey.database.EmployeeSurveyDb;
 import src.com.employeesurvey.model.EmployeeModel;
+import src.com.employeesurvey.model.GenderAgeModel;
 import src.com.employeesurvey.prefrences.EmployeePrefrence;
 import src.com.employeesurvey.util.Constants;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,7 +24,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Toast;
 
 /**
  * 
@@ -58,8 +60,10 @@ public class DashboardActivity extends FragmentActivity {
 		super.onOptionsItemSelected(item);
 
 		switch (item.getItemId()) {
-		case R.id.action_send_mail:
-
+		case R.id.action_send_report:
+			wrietDataInCsvFormat(
+					"Username,Storename,Date,GroupID,Location,Group_Type,Gender,Age",
+					true);
 			sendMail();
 
 			break;
@@ -79,94 +83,101 @@ public class DashboardActivity extends FragmentActivity {
 				.getUserNameStoreName();
 		String username = hashMap.get(Constants.USER_NAME_KEY);
 		String storename = hashMap.get(Constants.STORE_NAME_KEY);
-		wrietDataToFile("USERNAME :" + username + " STROEANME :" + storename);
-		System.out
-				.println("USERNAME :" + username + " STROEANME :" + storename);
+		//
 
-		int personCount = EmployeeSurveyDb.getInstance().getPersonCount();
-		System.out.println("PERSON COUNT :" + personCount);
-		wrietDataToFile("PERSON COUNT :" + personCount);
-		
-		int maleCount = EmployeeSurveyDb.getInstance().getNumberOfMalesFemales(
-				"OFF");
-		System.out.println("MALE COUNT :" + maleCount);
-		wrietDataToFile("MALE COUNT :" + maleCount);
-
-		int femaleCount = EmployeeSurveyDb.getInstance()
-				.getNumberOfMalesFemales("ON");
-		System.out.println("FEMALE CONUT :" + femaleCount);
-		wrietDataToFile("FEMALE CONUT :" + femaleCount);
-
-		/**
-		 * male
-		 */
-
-		String[] ageGrpString = getResources().getStringArray(
-				R.array.malefemaleage_array);
-		for (int i = 0; i < ageGrpString.length; i++) {
-			// male
-			int male_0_10_count = EmployeeSurveyDb.getInstance()
-					.getMaleFemaleByAgeGroup(ageGrpString[i].toString(), "OFF");
-			System.out.println("AGE GROUP :" + ageGrpString[i].toString()
-					+ " MALE : " + male_0_10_count);
-			wrietDataToFile("AGE GROUP :" + ageGrpString[i].toString()
-					+ " MALE : " + male_0_10_count);
-
-			// female
-			int female_0_10_count = EmployeeSurveyDb.getInstance()
-					.getMaleFemaleByAgeGroup(ageGrpString[i].toString(), "ON");
-			System.out.println("AGE GROUP :" + ageGrpString[i].toString()
-					+ " FEMALE : " + female_0_10_count);
-			wrietDataToFile("AGE GROUP :" + ageGrpString[i].toString()
-					+ " FEMALE : " + male_0_10_count);
-
-		}
-		String[] groupType = getResources().getStringArray(R.array.group_type);
-
-		for (int temp = 0; temp < groupType.length; temp++) {
-			for (int i = 0; i < ageGrpString.length; i++) {
-				// male
-				int male_0_10_count = EmployeeSurveyDb.getInstance()
-						.getGroupTypeDetail(groupType[temp].toString(),
-								ageGrpString[i].toString(), "OFF");
-				System.out.println("GROUP TYPE :" + groupType[temp].toString()
-						+ "AGE GROUP :" + ageGrpString[i].toString()
-						+ " MALE : " + male_0_10_count);
-				wrietDataToFile("GROUP TYPE :" + groupType[temp].toString()
-						+ "AGE GROUP :" + ageGrpString[i].toString()
-						+ " MALE : " + male_0_10_count);
-
-				// female
-				int female_0_10_count = EmployeeSurveyDb.getInstance()
-						.getGroupTypeDetail(groupType[temp].toString(),
-								ageGrpString[i].toString(), "ON");
-				System.out.println("GROUP TYPE :" + groupType[temp].toString()
-						+ "AGE GROUP :" + ageGrpString[i].toString()
-						+ " FEMALE : " + female_0_10_count);
-				wrietDataToFile("GROUP TYPE :" + groupType[temp].toString()
-						+ "AGE GROUP :" + ageGrpString[i].toString()
-						+ " FEMALE : " + female_0_10_count);
-
+		ArrayList<EmployeeModel> employeeModelsList = EmployeeSurveyDb
+				.getInstance().getDataModelForList();
+		for (int i = 0; i < employeeModelsList.size(); i++) {
+			String date = setTimeFormat(employeeModelsList.get(i).getTime());
+			String location = employeeModelsList.get(i).getLatitude() + "/"
+					+ employeeModelsList.get(i).getLongitude();
+			ArrayList<GenderAgeModel> genderAgeModelsList = employeeModelsList
+					.get(i).getGenderAgeModel();
+			for (int temp = 0; temp < genderAgeModelsList.size(); temp++) {
+				wrietDataInCsvFormat(username, false);
+				wrietDataInCsvFormat(storename, false);
+				wrietDataInCsvFormat(date, false);
+				wrietDataInCsvFormat(employeeModelsList.get(i).getRowId() + "",
+						false);
+				wrietDataInCsvFormat(location, false);
+				wrietDataInCsvFormat(genderAgeModelsList.get(temp)
+						.getGroupType(), false);
+				wrietDataInCsvFormat(genderAgeModelsList.get(temp).getGender(),
+						false);
+				wrietDataInCsvFormat(genderAgeModelsList.get(temp).getAgeGrp(),
+						false);
+				wrietDataInCsvFormat("", true);
 			}
 		}
-
-		
-
-		ArrayList<EmployeeModel> employeeModelsArray = EmployeeSurveyDb
-				.getInstance().getTimeLocationPersonCount();
-		for (int i = 0; i < employeeModelsArray.size(); i++) {
-			EmployeeModel employeeModel = employeeModelsArray.get(i);
-			System.out.println("TIme :" + employeeModel.getTime()
-					+ " Latitude :" + employeeModel.getLatitude()
-					+ " Longitude :" + employeeModel.getLongitude()
-					+ " Person Count :" + employeeModel.getPersonCount()
-					+ " \n");
-			wrietDataToFile("TIme :" + employeeModel.getTime() + " Latitude :"
-					+ employeeModel.getLatitude() + " Longitude :"
-					+ employeeModel.getLongitude() + " Person Count :"
-					+ employeeModel.getPersonCount() + " \n");
-
-		}
+		// /**
+		// * male
+		// */
+		//
+		// String[] ageGrpString = getResources().getStringArray(
+		// R.array.malefemaleage_array);
+		// for (int i = 0; i < ageGrpString.length; i++) {
+		// // male
+		// int male_0_10_count = EmployeeSurveyDb.getInstance()
+		// .getMaleFemaleByAgeGroup(ageGrpString[i].toString(), "OFF");
+		// System.out.println("AGE GROUP :" + ageGrpString[i].toString()
+		// + " MALE : " + male_0_10_count);
+		// wrietDataToFile("AGE GROUP :" + ageGrpString[i].toString()
+		// + " MALE : " + male_0_10_count);
+		//
+		// // female
+		// int female_0_10_count = EmployeeSurveyDb.getInstance()
+		// .getMaleFemaleByAgeGroup(ageGrpString[i].toString(), "ON");
+		// System.out.println("AGE GROUP :" + ageGrpString[i].toString()
+		// + " FEMALE : " + female_0_10_count);
+		// wrietDataToFile("AGE GROUP :" + ageGrpString[i].toString()
+		// + " FEMALE : " + male_0_10_count);
+		//
+		// }
+		// String[] groupType =
+		// getResources().getStringArray(R.array.group_type);
+		//
+		// for (int temp = 0; temp < groupType.length; temp++) {
+		// for (int i = 0; i < ageGrpString.length; i++) {
+		// // male
+		// int male_0_10_count = EmployeeSurveyDb.getInstance()
+		// .getGroupTypeDetail(groupType[temp].toString(),
+		// ageGrpString[i].toString(), "OFF");
+		// System.out.println("GROUP TYPE :" + groupType[temp].toString()
+		// + "AGE GROUP :" + ageGrpString[i].toString()
+		// + " MALE : " + male_0_10_count);
+		// wrietDataToFile("GROUP TYPE :" + groupType[temp].toString()
+		// + "AGE GROUP :" + ageGrpString[i].toString()
+		// + " MALE : " + male_0_10_count);
+		//
+		// // female
+		// int female_0_10_count = EmployeeSurveyDb.getInstance()
+		// .getGroupTypeDetail(groupType[temp].toString(),
+		// ageGrpString[i].toString(), "ON");
+		// System.out.println("GROUP TYPE :" + groupType[temp].toString()
+		// + "AGE GROUP :" + ageGrpString[i].toString()
+		// + " FEMALE : " + female_0_10_count);
+		// wrietDataToFile("GROUP TYPE :" + groupType[temp].toString()
+		// + "AGE GROUP :" + ageGrpString[i].toString()
+		// + " FEMALE : " + female_0_10_count);
+		//
+		// }
+		// }
+		//
+		// ArrayList<EmployeeModel> employeeModelsArray = EmployeeSurveyDb
+		// .getInstance().getTimeLocationPersonCount();
+		// for (int i = 0; i < employeeModelsArray.size(); i++) {
+		// EmployeeModel employeeModel = employeeModelsArray.get(i);
+		// System.out.println("TIme :" + employeeModel.getTime()
+		// + " Latitude :" + employeeModel.getLatitude()
+		// + " Longitude :" + employeeModel.getLongitude()
+		// + " Person Count :" + employeeModel.getPersonCount()
+		// + " \n");
+		// wrietDataToFile("TIme :" + employeeModel.getTime() + " Latitude :"
+		// + employeeModel.getLatitude() + " Longitude :"
+		// + employeeModel.getLongitude() + " Person Count :"
+		// + employeeModel.getPersonCount() + " \n");
+		//
+		// }
 
 		// Intent sendemai = new Intent(Intent.ACTION_SEND);
 		// sendemai.putExtra(Intent.EXTRA_EMAIL,
@@ -182,21 +193,21 @@ public class DashboardActivity extends FragmentActivity {
 		// sendemai.setType("message/rfc822");
 		// startActivity(Intent
 		// .createChooser(sendemai, "Select email application"));
-//		Intent sendemai = new Intent(Intent.ACTION_SEND);
-//		sendemai.putExtra(Intent.EXTRA_EMAIL,
-//				new String[] { "ankur1486@gmail.com" });
-//		// sendemai.putExtra(Intent.EXTRA_CC, new String[] { emailadd });
-//		sendemai.putExtra(
-//				Intent.EXTRA_SUBJECT,
-//				"Employee Data for user "
-//						+ EmployeePrefrence.getInstance().getStringValue(
-//								EmployeePrefrence.SET_USERNAME, ""));
-//		sendemai.putExtra(Intent.EXTRA_TEXT, "Testing ");
-//		// need this to prompts email client only
-//		sendemai.setType("message/rfc822");
-//		startActivity(Intent
-//				.createChooser(sendemai, "Select email application"));
-		
+		// Intent sendemai = new Intent(Intent.ACTION_SEND);
+		// sendemai.putExtra(Intent.EXTRA_EMAIL,
+		// new String[] { "ankur1486@gmail.com" });
+		// // sendemai.putExtra(Intent.EXTRA_CC, new String[] { emailadd });
+		// sendemai.putExtra(
+		// Intent.EXTRA_SUBJECT,
+		// "Employee Data for user "
+		// + EmployeePrefrence.getInstance().getStringValue(
+		// EmployeePrefrence.SET_USERNAME, ""));
+		// sendemai.putExtra(Intent.EXTRA_TEXT, "Testing ");
+		// // need this to prompts email client only
+		// sendemai.setType("message/rfc822");
+		// startActivity(Intent
+		// .createChooser(sendemai, "Select email application"));
+
 	}
 
 	private void showConfirmLogoutAlert() {
@@ -243,23 +254,59 @@ public class DashboardActivity extends FragmentActivity {
 	}
 
 	private void wrietDataToFile(String data) {
+		// File myFile = new File(Environment.getExternalStorageDirectory()
+		// + "/Export_EmployeeSurvey.txt");
+		// try {
+		// // myFile.
+		//
+		// myFile.createNewFile();
+		//
+		// FileOutputStream fOut = new FileOutputStream(myFile, true);
+		// OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
+		// myOutWriter.append('\n');
+		// myOutWriter.append(data);
+		// myOutWriter.flush();
+		// myOutWriter.close();
+		// } catch (IOException e) {
+		// // TODO Auto-generated catch block
+		// e.printStackTrace();
+		// }
+	}
+
+	private void wrietDataInCsvFormat(String data, boolean newLineRequired) {
 		File myFile = new File(Environment.getExternalStorageDirectory()
-				+ "/Export_EmployeeSurvey.txt");
+				+ "/Csv_EmployeeSurvey.csv");
 		try {
-//			myFile.
+			// myFile.
 
 			myFile.createNewFile();
 
 			FileOutputStream fOut = new FileOutputStream(myFile, true);
 			OutputStreamWriter myOutWriter = new OutputStreamWriter(fOut);
-			myOutWriter.append('\n');
+			myOutWriter.append(',');
 			myOutWriter.append(data);
+			if (newLineRequired) {
+				myOutWriter.append('\n');
+			}
 			myOutWriter.flush();
 			myOutWriter.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
 
+	private String setTimeFormat(String milliSeconds) {
+		// Create a DateFormatter object for displaying date in specified
+		// format.
+
+		long msecLong = Long.parseLong(milliSeconds);
+		DateFormat formatter = new SimpleDateFormat("dd:mm:yyy EEEE HH:mm:ss ");
+
+		// Create a calendar object that will convert the date and time value in
+		// milliseconds to date.
+		Calendar calendar = Calendar.getInstance();
+		calendar.setTimeInMillis(msecLong);
+		return formatter.format(calendar.getTime());
 	}
 }

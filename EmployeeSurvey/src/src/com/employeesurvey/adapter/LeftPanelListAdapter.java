@@ -12,22 +12,23 @@ import src.com.employeesurvey.model.EmployeeModel;
 import src.com.employeesurvey.model.GenderAgeModel;
 import src.com.employeesurvey.prefrences.EmployeePrefrence;
 import src.com.employeesurvey.util.Constants;
+import src.com.employeesurvey.util.ScalingLayout;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
-import android.widget.NumberPicker;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
@@ -155,82 +156,155 @@ public class LeftPanelListAdapter extends BaseAdapter {
 
 			@Override
 			public void onClick(View v) {
-				LayoutInflater inflater = (LayoutInflater) mContext
-						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-				View npView = inflater.inflate(
-						R.layout.number_picker_dialog_layout, null);
 
-				final NumberPicker numberPicker = (NumberPicker) npView
-						.findViewById(R.id.numberPicker1);
-				numberPicker.setMinValue(1);
-				numberPicker.setMaxValue(15);
+				// showAlert(mContext , position );
+				// AlertDialog.Builder alertDialog = new AlertDialog.Builder(
+				// mContext);
+				final Dialog dialog = new Dialog(mContext);
+				dialog.setTitle("Set Person Count");
+				dialog.setContentView(R.layout.number_picker_dialog_layout);
 
-				AlertDialog alertDialog = new AlertDialog.Builder(mContext)
-						.setTitle(R.string.number_of_persons_)
-						.setView(npView)
-						.setPositiveButton(R.string.ok,
-								new DialogInterface.OnClickListener() {
+				dialog.show();
 
-									public void onClick(DialogInterface dialog,
-											int whichButton) {
+				ScalingLayout mScalingLayoutView = (ScalingLayout) dialog
+						.findViewById(R.id.emma_category_button_layout);
 
-										int index = numberPicker.getValue();
-										EmployeeSurveyDb
-												.getInstance()
-												.updatePersonCount(
-														""
-																+ mEmployeeModel
-																		.get(position)
-																		.getRowId(),
-														index);
+				for (int i = 1; i <= 15; i++) {
+					Button button = new Button(mContext);
+					button.setText("" + i);
+					button.setId(i);
+					button.setGravity(Gravity.CENTER);
+					button.setOnClickListener(new OnClickListener() {
 
-										EmployeeSurveyDb
-												.getInstance()
-												.deleteGenderDetailByRowId(
-														""
-																+ mEmployeeModel
-																		.get(position)
-																		.getRowId());
-										for (int i = 0; i < index; i++) {
-											GenderAgeModel genderAgeModel = new GenderAgeModel();
-											EmployeeSurveyDb
-													.getInstance()
-													.insertGenderRow(
-															mEmployeeModel.get(
-																	position)
-																	.getRowId(),
-															genderAgeModel
-																	.getGender(),
-															genderAgeModel
-																	.getAgeGrp(),
-															genderAgeModel
-																	.getGroupType());
-										}
-										mEmployeeModel = EmployeeSurveyDb
-												.getInstance()
-												.getDataModelForList();
-										mSize = (mEmployeeModel.size() - 1);
-										Log.w(TAG, "Total left row"
-												+ mEmployeeModel.size());
-										notifyDataSetChanged();
-										holder.countButton.setText("" + index);
-										updateRightFragment(0, position);
-									}
+						@Override
+						public void onClick(View v) {
+							Button button = (Button) v.findViewById(v.getId());
+							EmployeeSurveyDb.getInstance()
+									.updatePersonCount(
+											""
+													+ mEmployeeModel.get(
+															position)
+															.getRowId(),
+											button.getId());
 
-								})
-						.setNegativeButton(R.string.cancel,
-								new DialogInterface.OnClickListener() {
-									public void onClick(DialogInterface dialog,
-											int whichButton) {
-									}
-								}).create();
-				alertDialog
-						.getWindow()
-						.setSoftInputMode(
-								WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-				alertDialog.show();
+							EmployeeSurveyDb.getInstance()
+									.deleteGenderDetailByRowId(
+											""
+													+ mEmployeeModel.get(
+															position)
+															.getRowId());
+							for (int j = 0; j < button.getId(); j++) {
+								GenderAgeModel genderAgeModel = new GenderAgeModel();
+								EmployeeSurveyDb.getInstance()
+										.insertGenderRow(
+												mEmployeeModel.get(position)
+														.getRowId(),
+												genderAgeModel.getGender(),
+												genderAgeModel.getAgeGrp(),
+												genderAgeModel.getGroupType());
+							}
+							mEmployeeModel = EmployeeSurveyDb.getInstance()
+									.getDataModelForList();
+							mSize = (mEmployeeModel.size() - 1);
+							Log.w(TAG, "Total left row" + mEmployeeModel.size());
+							notifyDataSetChanged();
+							holder.countButton.setText(""
+									+ button.getText().toString());
+							updateRightFragment(0, position);
+							dialog.dismiss();
+						}
+					});
+					mScalingLayoutView.addView(button);
+				}
+
+				// LayoutInflater inflater = (LayoutInflater) mContext
+				// .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				// View npView = inflater.inflate(
+				// R.layout.number_picker_dialog_layout, null);
+
 			}
 		});
+
+		// holder.countButton.setOnClickListener(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// LayoutInflater inflater = (LayoutInflater) mContext
+		// .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		// View npView = inflater.inflate(
+		// R.layout.number_picker_dialog_layout, null);
+		//
+		// final NumberPicker numberPicker = (NumberPicker) npView
+		// .findViewById(R.id.numberPicker1);
+		// numberPicker.setMinValue(1);
+		// numberPicker.setMaxValue(15);
+		//
+		// AlertDialog alertDialog = new AlertDialog.Builder(mContext)
+		// .setTitle(R.string.number_of_persons_)
+		// .setView(npView)
+		// .setPositiveButton(R.string.ok,
+		// new DialogInterface.OnClickListener() {
+		//
+		// public void onClick(DialogInterface dialog,
+		// int whichButton) {
+		//
+		// int index = numberPicker.getValue();
+		// EmployeeSurveyDb
+		// .getInstance()
+		// .updatePersonCount(
+		// ""
+		// + mEmployeeModel
+		// .get(position)
+		// .getRowId(),
+		// index);
+		//
+		// EmployeeSurveyDb
+		// .getInstance()
+		// .deleteGenderDetailByRowId(
+		// ""
+		// + mEmployeeModel
+		// .get(position)
+		// .getRowId());
+		// for (int i = 0; i < index; i++) {
+		// GenderAgeModel genderAgeModel = new GenderAgeModel();
+		// EmployeeSurveyDb
+		// .getInstance()
+		// .insertGenderRow(
+		// mEmployeeModel.get(
+		// position)
+		// .getRowId(),
+		// genderAgeModel
+		// .getGender(),
+		// genderAgeModel
+		// .getAgeGrp(),
+		// genderAgeModel
+		// .getGroupType());
+		// }
+		// mEmployeeModel = EmployeeSurveyDb
+		// .getInstance()
+		// .getDataModelForList();
+		// mSize = (mEmployeeModel.size() - 1);
+		// Log.w(TAG, "Total left row"
+		// + mEmployeeModel.size());
+		// notifyDataSetChanged();
+		// holder.countButton.setText("" + index);
+		// updateRightFragment(0, position);
+		// }
+		//
+		// })
+		// .setNegativeButton(R.string.cancel,
+		// new DialogInterface.OnClickListener() {
+		// public void onClick(DialogInterface dialog,
+		// int whichButton) {
+		// }
+		// }).create();
+		// alertDialog
+		// .getWindow()
+		// .setSoftInputMode(
+		// WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+		// alertDialog.show();
+		// }
+		// });
 
 		holder.groupIdTextView.setText("" + (1 + position));
 
@@ -378,7 +452,8 @@ public class LeftPanelListAdapter extends BaseAdapter {
 
 		}
 	}
-	public void updateData(){
+
+	public void updateData() {
 		mEmployeeModel = EmployeeSurveyDb.getInstance().getDataModelForList();
 		notifyDataSetChanged();
 	}

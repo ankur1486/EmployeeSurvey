@@ -181,18 +181,20 @@ public class RightFragment extends Fragment implements OnClickListener {
 								genderAgeModelsList.get(i).getAgeGrp(),
 								mGroupType);
 					}
-				}
-				int ageGroupSize = 0;
-				for (int i = 0; i < genderAgeModelsList.size(); i++) {
-					if(genderAgeModelsList.get(i).getAgeGrp().equals("")){
-						break;
-					}else{
-						ageGroupSize++;
+
+					int ageGroupSize = 0;
+					for (int i = 0; i < genderAgeModelsList.size(); i++) {
+						if (genderAgeModelsList.get(i).getAgeGrp().equals("")) {
+							break;
+						} else {
+							ageGroupSize++;
+						}
 					}
-				}
-				if(ageGroupSize == genderAgeModelsList.size()){
-					EmployeeSurveyDb.getInstance().updateFormCompleted(""+mRowID);
-					updateLeftFragment();
+					if (ageGroupSize == genderAgeModelsList.size()) {
+						EmployeeSurveyDb.getInstance().updateFormCompleted(
+								"" + mRowID);
+						updateLeftFragment();
+					}
 				}
 			}
 
@@ -202,9 +204,11 @@ public class RightFragment extends Fragment implements OnClickListener {
 			break;
 		}
 	}
+
 	private void updateLeftFragment() {
-		LeftFragment rightFragment = (LeftFragment) getFragmentManager().findFragmentById(R.id.left_fragment);		
-			rightFragment.updateLeftList();
-		
+		LeftFragment rightFragment = (LeftFragment) getFragmentManager()
+				.findFragmentById(R.id.left_fragment);
+		rightFragment.updateLeftList();
+
 	}
 }
