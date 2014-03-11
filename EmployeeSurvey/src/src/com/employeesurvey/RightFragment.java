@@ -98,11 +98,15 @@ public class RightFragment extends Fragment implements OnClickListener {
 					grpTypeSpinner.setSelection(5);
 					grpTypePosition = 5;
 				}
+			} else {
+				grpTypePosition = 0;
 			}
+		} else {
+			grpTypeSpinner.setSelection(0);
 		}
 		mRowID = rowId;
 		if (genderListAdapter != null) {
-			genderListAdapter.setNumberOfCounts(arrayList);
+			genderListAdapter.setNumberOfCounts(arrayList, rowId);
 		}
 
 	}
@@ -154,6 +158,7 @@ public class RightFragment extends Fragment implements OnClickListener {
 			// Toast.LENGTH_LONG).show();
 			// mGroupInt = parent.getPositionForView(view);
 			mGroupType = parent.getItemAtPosition(pos).toString();
+			EmployeeSurveyDb.getInstance().updateGroupType(mRowID, mGroupType);
 
 		}
 
@@ -168,35 +173,27 @@ public class RightFragment extends Fragment implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.save_button:
 
-			if (genderListAdapter != null) {
-				List<GenderAgeModel> genderAgeModelsList = genderListAdapter
-						.getUpdatedGenderAgeGrp();
-				if (genderAgeModelsList != null
-						&& genderAgeModelsList.size() > 0) {
-					EmployeeSurveyDb.getInstance().deleteGenderDetailByRowId(
-							"" + mRowID);
-					for (int i = 0; i < genderAgeModelsList.size(); i++) {
-						EmployeeSurveyDb.getInstance().insertGenderRow(mRowID,
-								genderAgeModelsList.get(i).getGender(),
-								genderAgeModelsList.get(i).getAgeGrp(),
-								mGroupType);
-					}
+			ArrayList<EmployeeModel> employeeModelList = EmployeeSurveyDb
+					.getInstance().getDataModelForList();
+			for (int temp = 0; temp < employeeModelList.size(); temp++) {
+				ArrayList<GenderAgeModel> genderAgeModelsList = employeeModelList
+						.get(temp).getGenderAgeModel();
+				int ageGroupSize = 0;
+				for (int i = 0; i < genderAgeModelsList.size(); i++) {
 
-					int ageGroupSize = 0;
-					for (int i = 0; i < genderAgeModelsList.size(); i++) {
-						if (genderAgeModelsList.get(i).getAgeGrp().equals("")) {
-							break;
-						} else {
-							ageGroupSize++;
-						}
-					}
-					if (ageGroupSize == genderAgeModelsList.size()) {
-						EmployeeSurveyDb.getInstance().updateFormCompleted(
-								"" + mRowID);
-						updateLeftFragment();
+					if (genderAgeModelsList.get(i).getAgeGrp().equals("")) {
+						break;
+					} else {
+						ageGroupSize++;
 					}
 				}
+				if (ageGroupSize == genderAgeModelsList.size()) {
+					EmployeeSurveyDb.getInstance().updateFormCompleted(
+							"" + mRowID);
+
+				}
 			}
+			updateLeftFragment();
 
 			break;
 

@@ -197,6 +197,7 @@ public class LeftPanelListAdapter extends BaseAdapter {
 								GenderAgeModel genderAgeModel = new GenderAgeModel();
 								EmployeeSurveyDb.getInstance()
 										.insertGenderRow(
+												j,
 												mEmployeeModel.get(position)
 														.getRowId(),
 												genderAgeModel.getGender(),
@@ -224,87 +225,6 @@ public class LeftPanelListAdapter extends BaseAdapter {
 
 			}
 		});
-
-		// holder.countButton.setOnClickListener(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		// LayoutInflater inflater = (LayoutInflater) mContext
-		// .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		// View npView = inflater.inflate(
-		// R.layout.number_picker_dialog_layout, null);
-		//
-		// final NumberPicker numberPicker = (NumberPicker) npView
-		// .findViewById(R.id.numberPicker1);
-		// numberPicker.setMinValue(1);
-		// numberPicker.setMaxValue(15);
-		//
-		// AlertDialog alertDialog = new AlertDialog.Builder(mContext)
-		// .setTitle(R.string.number_of_persons_)
-		// .setView(npView)
-		// .setPositiveButton(R.string.ok,
-		// new DialogInterface.OnClickListener() {
-		//
-		// public void onClick(DialogInterface dialog,
-		// int whichButton) {
-		//
-		// int index = numberPicker.getValue();
-		// EmployeeSurveyDb
-		// .getInstance()
-		// .updatePersonCount(
-		// ""
-		// + mEmployeeModel
-		// .get(position)
-		// .getRowId(),
-		// index);
-		//
-		// EmployeeSurveyDb
-		// .getInstance()
-		// .deleteGenderDetailByRowId(
-		// ""
-		// + mEmployeeModel
-		// .get(position)
-		// .getRowId());
-		// for (int i = 0; i < index; i++) {
-		// GenderAgeModel genderAgeModel = new GenderAgeModel();
-		// EmployeeSurveyDb
-		// .getInstance()
-		// .insertGenderRow(
-		// mEmployeeModel.get(
-		// position)
-		// .getRowId(),
-		// genderAgeModel
-		// .getGender(),
-		// genderAgeModel
-		// .getAgeGrp(),
-		// genderAgeModel
-		// .getGroupType());
-		// }
-		// mEmployeeModel = EmployeeSurveyDb
-		// .getInstance()
-		// .getDataModelForList();
-		// mSize = (mEmployeeModel.size() - 1);
-		// Log.w(TAG, "Total left row"
-		// + mEmployeeModel.size());
-		// notifyDataSetChanged();
-		// holder.countButton.setText("" + index);
-		// updateRightFragment(0, position);
-		// }
-		//
-		// })
-		// .setNegativeButton(R.string.cancel,
-		// new DialogInterface.OnClickListener() {
-		// public void onClick(DialogInterface dialog,
-		// int whichButton) {
-		// }
-		// }).create();
-		// alertDialog
-		// .getWindow()
-		// .setSoftInputMode(
-		// WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-		// alertDialog.show();
-		// }
-		// });
 
 		holder.groupIdTextView.setText("" + (1 + position));
 

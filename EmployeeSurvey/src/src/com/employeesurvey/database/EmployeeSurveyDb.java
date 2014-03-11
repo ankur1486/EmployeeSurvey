@@ -104,6 +104,8 @@ public class EmployeeSurveyDb {
 	 */
 	public static final String GENDER_DETAIL_TABLE = "gender_detail";
 
+	private static final String FIELD_GENDER_ROW_ID = "gender_row_id";
+	private static final int FIELD_GENDER_ROW_ID_COULMN_INDEX = 0;
 	private static final String FIELD_GENDER_TYPE = "gender_type";
 	private static final int FIELD_GENDER_TYPE_COULMN_INDEX = 1;
 	private static final String FIELD_AGE_GROUP = "age_group";
@@ -114,13 +116,14 @@ public class EmployeeSurveyDb {
 	private final static String QUERY_GENDER_TABLE = "CREATE TABLE IF NOT EXISTS "
 			+ GENDER_DETAIL_TABLE
 			+ " ("
+			+ FIELD_GENDER_ROW_ID
+			+ " INTEGER, "
 			+ FIELD_ROW_ID
 			+ " INTEGER, "
 			+ FIELD_GENDER_TYPE
 			+ " TEXT, "
 			+ FIELD_AGE_GROUP
-			+ " TEXT, "
-			+ FIELD_GROUP_TYPE + " TEXT);";
+			+ " TEXT, " + FIELD_GROUP_TYPE + " TEXT);";
 
 	/** Projection for getting value of an error key */
 	private final static String[] PROJECTION_GENDER_VALUE = { FIELD_ROW_ID,
@@ -269,17 +272,45 @@ public class EmployeeSurveyDb {
 		return result;
 	}
 
-	public synchronized long insertGenderRow(int rowID, String genderType,
-			String ageGroup, String groupType) {
+	public synchronized long insertGenderRow(int genderRowID, int rowID,
+			String genderType, String ageGroup, String groupType) {
 
 		// Create object holding values
 		ContentValues cv = new ContentValues();
 
+		 cv.put(FIELD_GENDER_ROW_ID, genderRowID);
 		cv.put(FIELD_ROW_ID, rowID);
 		cv.put(FIELD_GENDER_TYPE, genderType);
 		cv.put(FIELD_AGE_GROUP, ageGroup);
 		cv.put(FIELD_GROUP_TYPE, groupType);
 		long result = database.insert(GENDER_DETAIL_TABLE, null, cv);
+
+		return result;
+	}
+
+	/*
+	 * update right gender row on click of row
+	 */
+	public synchronized long updateGenderRow(int genderRowID, int rowID,
+			String genderType, String ageGroup, String groupType) {
+
+		String whereClause = FIELD_GENDER_ROW_ID + "= ?" + " AND "
+				+ FIELD_ROW_ID + "= ?";
+		String[] whereArgs = new String[] { "" + genderRowID, "" + rowID };
+
+		// Create object holding values
+		ContentValues cv = new ContentValues();
+
+		cv.put(FIELD_GENDER_ROW_ID, genderRowID);
+		cv.put(FIELD_ROW_ID, rowID);
+		cv.put(FIELD_GENDER_TYPE, genderType);
+		cv.put(FIELD_AGE_GROUP, ageGroup);
+		cv.put(FIELD_GROUP_TYPE, groupType);
+		long result = database.update(GENDER_DETAIL_TABLE, cv, whereClause,
+				whereArgs);
+
+		System.out.println("Result :" + result + " position :" + genderRowID
+				+ "Left row ID :" + rowID);
 
 		return result;
 	}
@@ -610,6 +641,21 @@ public class EmployeeSurveyDb {
 
 	public void deleteGenderListTable() {
 		database.delete(GENDER_DETAIL_TABLE, null, null);
+
+	}
+
+	public void updateGroupType(int mRowID, String mGroupType) {
+		String whereClause = FIELD_ROW_ID + "= ?";
+		String[] whereArgs = new String[] { "" + mRowID, };
+
+		// Create object holding values
+		ContentValues cv = new ContentValues();
+
+		cv.put(FIELD_GROUP_TYPE, mGroupType);
+		long result = database.update(GENDER_DETAIL_TABLE, cv, whereClause,
+				whereArgs);
+
+		Log.w(TAG, "gender type rows update"+result);
 
 	}
 

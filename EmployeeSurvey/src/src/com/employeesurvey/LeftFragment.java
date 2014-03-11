@@ -19,9 +19,9 @@ import android.widget.ListView;
 import com.google.android.gms.location.LocationListener;
 
 /**
- * Left fragment class which will hold the layout 
+ * Left fragment class which will hold the layout
  * 
- *
+ * 
  */
 public class LeftFragment extends Fragment implements LocationListener {
 
@@ -43,17 +43,19 @@ public class LeftFragment extends Fragment implements LocationListener {
 			Bundle savedInstanceState) {
 		View fragment = inflater.inflate(R.layout.leftpanel_layout, container);
 		try {
-			int leftListCount = EmployeeSurveyDb.getInstance().getLeftListCount();
+			int leftListCount = EmployeeSurveyDb.getInstance()
+					.getLeftListCount();
 			String latitude = EmployeePrefrence.getInstance().getStringValue(
 					EmployeePrefrence.SET_LATITUDE, "");
 			String longitude = EmployeePrefrence.getInstance().getStringValue(
 					EmployeePrefrence.SET_LONGITUDE, "");
 			if (leftListCount == 1) {
 				EmployeeSurveyDb.getInstance().insertLeftRow(leftListCount, 0,
-						"" + System.currentTimeMillis(), latitude, longitude, 0, 0);
+						"" + System.currentTimeMillis(), latitude, longitude,
+						0, 0);
 			}
 			init(fragment);
-			
+
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -62,15 +64,19 @@ public class LeftFragment extends Fragment implements LocationListener {
 	}
 
 	private void init(View fragment) {
-		
-		ArrayList<EmployeeModel> employeeModels = EmployeeSurveyDb.getInstance().getDataModelForList();
-		
-//		int listCount = EmployeeSurveyDb.getInstance().getLeftListCount();
+
+		ArrayList<EmployeeModel> employeeModels = EmployeeSurveyDb
+				.getInstance().getDataModelForList();
+
+		// int listCount = EmployeeSurveyDb.getInstance().getLeftListCount();
 		ListView mLeftPanelListView = (ListView) fragment
 				.findViewById(R.id.left_panel_listView);
-		 genderListAdapter = new LeftPanelListAdapter(
-				getActivity(), employeeModels , LeftFragment.this);
+		genderListAdapter = new LeftPanelListAdapter(getActivity(),
+				employeeModels, LeftFragment.this);
 		mLeftPanelListView.setAdapter(genderListAdapter);
+
+		// Select the last row so it will scroll into view...
+//		mLeftPanelListView.setSelection(genderListAdapter.getCount() - 1);
 	}
 
 	@Override

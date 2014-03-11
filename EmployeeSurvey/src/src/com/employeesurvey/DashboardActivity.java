@@ -24,6 +24,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.Window;
 import android.view.WindowManager;
+//import com.google.android.gms.common.api.ResultCallback;
 
 /**
  * 
@@ -109,104 +110,20 @@ public class DashboardActivity extends FragmentActivity {
 				wrietDataInCsvFormat("", true);
 			}
 		}
-		// /**
-		// * male
-		// */
-		//
-		// String[] ageGrpString = getResources().getStringArray(
-		// R.array.malefemaleage_array);
-		// for (int i = 0; i < ageGrpString.length; i++) {
-		// // male
-		// int male_0_10_count = EmployeeSurveyDb.getInstance()
-		// .getMaleFemaleByAgeGroup(ageGrpString[i].toString(), "OFF");
-		// System.out.println("AGE GROUP :" + ageGrpString[i].toString()
-		// + " MALE : " + male_0_10_count);
-		// wrietDataToFile("AGE GROUP :" + ageGrpString[i].toString()
-		// + " MALE : " + male_0_10_count);
-		//
-		// // female
-		// int female_0_10_count = EmployeeSurveyDb.getInstance()
-		// .getMaleFemaleByAgeGroup(ageGrpString[i].toString(), "ON");
-		// System.out.println("AGE GROUP :" + ageGrpString[i].toString()
-		// + " FEMALE : " + female_0_10_count);
-		// wrietDataToFile("AGE GROUP :" + ageGrpString[i].toString()
-		// + " FEMALE : " + male_0_10_count);
-		//
-		// }
-		// String[] groupType =
-		// getResources().getStringArray(R.array.group_type);
-		//
-		// for (int temp = 0; temp < groupType.length; temp++) {
-		// for (int i = 0; i < ageGrpString.length; i++) {
-		// // male
-		// int male_0_10_count = EmployeeSurveyDb.getInstance()
-		// .getGroupTypeDetail(groupType[temp].toString(),
-		// ageGrpString[i].toString(), "OFF");
-		// System.out.println("GROUP TYPE :" + groupType[temp].toString()
-		// + "AGE GROUP :" + ageGrpString[i].toString()
-		// + " MALE : " + male_0_10_count);
-		// wrietDataToFile("GROUP TYPE :" + groupType[temp].toString()
-		// + "AGE GROUP :" + ageGrpString[i].toString()
-		// + " MALE : " + male_0_10_count);
-		//
-		// // female
-		// int female_0_10_count = EmployeeSurveyDb.getInstance()
-		// .getGroupTypeDetail(groupType[temp].toString(),
-		// ageGrpString[i].toString(), "ON");
-		// System.out.println("GROUP TYPE :" + groupType[temp].toString()
-		// + "AGE GROUP :" + ageGrpString[i].toString()
-		// + " FEMALE : " + female_0_10_count);
-		// wrietDataToFile("GROUP TYPE :" + groupType[temp].toString()
-		// + "AGE GROUP :" + ageGrpString[i].toString()
-		// + " FEMALE : " + female_0_10_count);
-		//
-		// }
-		// }
-		//
-		// ArrayList<EmployeeModel> employeeModelsArray = EmployeeSurveyDb
-		// .getInstance().getTimeLocationPersonCount();
-		// for (int i = 0; i < employeeModelsArray.size(); i++) {
-		// EmployeeModel employeeModel = employeeModelsArray.get(i);
-		// System.out.println("TIme :" + employeeModel.getTime()
-		// + " Latitude :" + employeeModel.getLatitude()
-		// + " Longitude :" + employeeModel.getLongitude()
-		// + " Person Count :" + employeeModel.getPersonCount()
-		// + " \n");
-		// wrietDataToFile("TIme :" + employeeModel.getTime() + " Latitude :"
-		// + employeeModel.getLatitude() + " Longitude :"
-		// + employeeModel.getLongitude() + " Person Count :"
-		// + employeeModel.getPersonCount() + " \n");
-		//
-		// }
 
-		// Intent sendemai = new Intent(Intent.ACTION_SEND);
-		// sendemai.putExtra(Intent.EXTRA_EMAIL,
-		// new String[] { "ankur1486@gmail.com" });
-		// // sendemai.putExtra(Intent.EXTRA_CC, new String[] { emailadd });
-		// sendemai.putExtra(
-		// Intent.EXTRA_SUBJECT,
-		// "Employee Data for user "
-		// + EmployeePrefrence.getInstance().getStringValue(
-		// EmployeePrefrence.SET_USERNAME, ""));
-		// sendemai.putExtra(Intent.EXTRA_TEXT, "Testing ");
-		// // need this to prompts email client only
-		// sendemai.setType("message/rfc822");
-		// startActivity(Intent
-		// .createChooser(sendemai, "Select email application"));
-		// Intent sendemai = new Intent(Intent.ACTION_SEND);
-		// sendemai.putExtra(Intent.EXTRA_EMAIL,
-		// new String[] { "ankur1486@gmail.com" });
-		// // sendemai.putExtra(Intent.EXTRA_CC, new String[] { emailadd });
-		// sendemai.putExtra(
-		// Intent.EXTRA_SUBJECT,
-		// "Employee Data for user "
-		// + EmployeePrefrence.getInstance().getStringValue(
-		// EmployeePrefrence.SET_USERNAME, ""));
-		// sendemai.putExtra(Intent.EXTRA_TEXT, "Testing ");
-		// // need this to prompts email client only
-		// sendemai.setType("message/rfc822");
-		// startActivity(Intent
-		// .createChooser(sendemai, "Select email application"));
+//		Intent sendIntent = new Intent(Intent.ACTION_SEND);
+//		sendIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+//		sendIntent.setType("text/csv");
+//		sendIntent.putExtra(Intent.EXTRA_EMAIL,
+//				new String[] { "kuldeeprajput025@gmail.com" });
+//		// sendemai.putExtra(Intent.EXTRA_CC, new String[] { emailadd });
+//		sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Report ");
+////		sendIntent.putExtra(
+////				Intent.EXTRA_STREAM,
+////				Uri.parse(Environment.getExternalStorageDirectory()
+////						+ "/Csv_EmployeeSurvey.csv"));
+//		sendIntent.putExtra(Intent.EXTRA_TEXT, "Enjoy the report");
+//		startActivity(Intent.createChooser(sendIntent, "Email:"));
 
 	}
 

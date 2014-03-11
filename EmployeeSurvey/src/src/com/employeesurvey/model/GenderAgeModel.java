@@ -42,7 +42,7 @@ public class GenderAgeModel implements Serializable {
 	}
 
 	public void setrowId(int grpType) {
-		this.rowId = rowId;
+		this.rowId = grpType;
 	}
 
 }
